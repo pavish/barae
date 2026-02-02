@@ -1,0 +1,68 @@
+{
+  "name": "barae-backend",
+  "version": "0.1.0",
+  "description": "",
+  "main": "./src/index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "npm run build && node ./dist/index.js",
+    "build": "tsc -p tsconfig.build.json && cp -r migrations dist/migrations",
+    "dev": "tsx watch ./src/index.ts",
+    "test": "tsx --test --experimental-test-coverage ./tests/**/*.test.ts",
+    "check:lint": "eslint .",
+    "fix:lint": "eslint . --fix",
+    "check:format": "prettier . --check",
+    "fix:format": "prettier . --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pavish/barae.git"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true,
+    "printWidth": 100
+  },
+  "keywords": [
+    "blogs"
+  ],
+  "author": "Pavish Kumar Ramani Gopal <pavishkumar.r@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pavish/barae/issues"
+  },
+  "homepage": "https://github.com/pavish/barae#readme",
+  "dependencies": {
+    "@fastify/autoload": "^6.3.1",
+    "@fastify/cors": "^11.2.0",
+    "@fastify/env": "^5.0.3",
+    "@fastify/error": "^4.2.0",
+    "@fastify/type-provider-typebox": "^6.1.0",
+    "@sinclair/typebox": "^0.34.47",
+    "drizzle-orm": "^0.45.1",
+    "drizzle-typebox": "^0.3.3",
+    "fastify": "^5.7.0",
+    "fastify-plugin": "^5.1.0",
+    "postgres": "^3.4.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@types/node": "^25.0.8",
+    "drizzle-kit": "^0.31.8",
+    "drizzle-seed": "^0.3.1",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "fastify-tsconfig": "^3.0.0",
+    "globals": "^17.0.0",
+    "prettier": "^3.8.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.53.0"
+  }
+}
