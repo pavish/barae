@@ -9,13 +9,13 @@ Essential end-to-end flow: login -> connect/create repo -> pick theme -> add con
 
 ### Authentication
 
-- [ ] **AUTH-01**: User can sign up with email and password
-- [ ] **AUTH-02**: User receives email verification after signup
-- [ ] **AUTH-03**: User can log in with email/password
-- [ ] **AUTH-04**: User can log in with GitHub OAuth
-- [ ] **AUTH-05**: User can reset password via email link
-- [ ] **AUTH-06**: User session persists across browser sessions
-- [ ] **AUTH-07**: User can log out from any page
+- [x] **AUTH-01**: User can sign up with email and password
+- [x] **AUTH-02**: User receives email verification after signup
+- [x] **AUTH-03**: User can log in with email/password
+- [x] **AUTH-04**: User can log in with GitHub OAuth
+- [x] **AUTH-05**: User can reset password via email link
+- [x] **AUTH-06**: User session persists across browser sessions
+- [x] **AUTH-07**: User can log out from any page
 
 ### GitHub Integration
 
@@ -65,9 +65,9 @@ Essential end-to-end flow: login -> connect/create repo -> pick theme -> add con
 
 ### Dashboard & Frontend
 
-- [ ] **DASH-01**: React + Vite dashboard for all user interactions
-- [ ] **DASH-02**: Dashboard is fully responsive
-- [ ] **DASH-03**: Dashboard and editor work well on mobile devices
+- [x] **DASH-01**: React + Vite dashboard for all user interactions
+- [x] **DASH-02**: Dashboard is fully responsive
+- [x] **DASH-03**: Dashboard and editor work well on mobile devices
 
 ### Feeds
 
@@ -190,16 +190,16 @@ Explicitly excluded. Documented to prevent scope creep.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
-| AUTH-04 | Phase 1 | Pending |
-| AUTH-05 | Phase 1 | Pending |
-| AUTH-06 | Phase 1 | Pending |
-| AUTH-07 | Phase 1 | Pending |
-| DASH-01 | Phase 1 | Pending |
-| DASH-02 | Phase 1 | Pending |
-| DASH-03 | Phase 1 | Pending |
+| AUTH-01 | Phase 1 | Complete |
+| AUTH-02 | Phase 1 | Complete |
+| AUTH-03 | Phase 1 | Complete |
+| AUTH-04 | Phase 1 | Complete |
+| AUTH-05 | Phase 1 | Complete |
+| AUTH-06 | Phase 1 | Complete |
+| AUTH-07 | Phase 1 | Complete |
+| DASH-01 | Phase 1 | Complete |
+| DASH-02 | Phase 1 | Complete |
+| DASH-03 | Phase 1 | Complete |
 | GHUB-01 | Phase 2 | Pending |
 | GHUB-02 | Phase 2 | Pending |
 | GHUB-03 | Phase 2 | Pending |
