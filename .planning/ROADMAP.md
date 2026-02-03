@@ -14,6 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Auth** - User authentication with dashboard shell
 - [x] **Phase 1.1: Code Refactoring** - Improve code quality before proceeding (INSERTED)
+- [ ] **Phase 1.2: Code Review** - Thoroughly review implemented code for quality and issues (INSERTED)
 - [ ] **Phase 2: GitHub Integration** - GitHub App installation and repo access
 - [ ] **Phase 3: Sites & Templates** - Site creation with Astro templates and GitHub Pages
 - [ ] **Phase 4: Content & Editor** - Content management with dual-mode editor
@@ -50,6 +51,22 @@ Plans:
 
 Plans:
 - [x] 01.1-01: Backend refactoring (single DB, versioned routes, plugin patterns, infra docs)
+
+### Phase 1.2: Code Review (INSERTED)
+**Goal**: Thoroughly review all implemented code for quality, patterns, and potential issues
+**Depends on**: Phase 1.1
+**Requirements**: None (quality assurance)
+**Success Criteria** (what must be TRUE):
+  1. All code reviewed for quality, consistency, and best practices
+  2. Potential bugs, security issues, or performance problems identified
+  3. Code patterns documented and any anti-patterns flagged
+  4. Recommendations provided for improvements
+**Plans**: 3 plans
+
+Plans:
+- [ ] 01.2-01-PLAN.md — Backend security audit and architecture review (14 files)
+- [ ] 01.2-02-PLAN.md — Frontend auth, dashboard, and routing review (25 files)
+- [ ] 01.2-03-PLAN.md — Shared components, settings review, and consolidated report (14 files)
 
 ### Phase 2: GitHub Integration
 **Goal**: Barae can operate on user's GitHub repositories via installed App
@@ -101,12 +118,13 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 1.1 -> 2 -> 3 -> 4
+Phases execute in numeric order: 1 -> 1.1 -> 1.2 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Auth | 3/3 | Complete | 2026-02-03 |
 | 1.1 Code Refactoring | 1/1 | Complete | 2026-02-03 |
+| 1.2 Code Review | 0/3 | Not started | - |
 | 2. GitHub Integration | 0/2 | Not started | - |
 | 3. Sites & Templates | 0/2 | Not started | - |
 | 4. Content & Editor | 0/3 | Not started | - |
