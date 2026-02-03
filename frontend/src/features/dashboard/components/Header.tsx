@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { ThemeToggle } from '../../../shared/components'
 import { UserMenu } from './UserMenu'
 
@@ -34,12 +35,12 @@ export function Header({ onMobileMenuToggle }: HeaderProps) {
           </button>
 
           {/* Logo */}
-          <a
-            href="/dashboard"
+          <Link
+            to="/dashboard"
             className="text-xl font-bold text-[var(--color-foreground)]"
           >
             Barae
-          </a>
+          </Link>
         </div>
 
         {/* Center: Search bar - hidden on small screens */}
