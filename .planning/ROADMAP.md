@@ -29,12 +29,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. User session persists across browser sessions (stays logged in)
   4. User can reset forgotten password via email
   5. Dashboard is responsive and works on mobile devices
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
-- [ ] 01-03: TBD
+- [ ] 01-01-PLAN.md — Backend auth setup with better-auth + Frontend scaffold with Vite
+- [ ] 01-02-PLAN.md — Auth UI (login/signup/OAuth) + Email integration with Resend
+- [ ] 01-03-PLAN.md — Dashboard shell with responsive navigation + Settings page
 
 ### Phase 2: GitHub Integration
 **Goal**: Barae can operate on user's GitHub repositories via installed App
@@ -90,7 +90,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Auth | 0/3 | Not started | - |
+| 1. Foundation & Auth | 0/3 | Planned | - |
 | 2. GitHub Integration | 0/2 | Not started | - |
 | 3. Sites & Templates | 0/2 | Not started | - |
 | 4. Content & Editor | 0/3 | Not started | - |
