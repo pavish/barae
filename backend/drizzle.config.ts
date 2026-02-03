@@ -9,7 +9,7 @@ export const dbCredentials = {
 }
 
 export default defineConfig({
-  schema: './src/db/schema/',
+  schema: ['./src/db/schema/users.ts', './src/db/schema/common.ts', './src/auth/schema.ts'],
   out: './migrations',
   dialect: 'postgresql',
   migrations: {
