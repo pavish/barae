@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Header } from './Header'
 import { Sidebar } from './Sidebar'
@@ -7,25 +7,19 @@ import { VerificationBanner } from './VerificationBanner'
 
 export function DashboardLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
-
-  // Detect mobile viewport
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768) // md breakpoint
-    }
-
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
 
   // Close mobile menu when resizing to desktop
-  useEffect(() => {
-    if (!isMobile) {
+  const closeMobileMenuOnDesktop = useCallback(() => {
+    if (window.innerWidth >= 768) {
       setIsMobileMenuOpen(false)
     }
-  }, [isMobile])
+  }, [])
+
+  // Handle resize to close mobile menu on desktop
+  useEffect(() => {
+    window.addEventListener('resize', closeMobileMenuOnDesktop)
+    return () => window.removeEventListener('resize', closeMobileMenuOnDesktop)
+  }, [closeMobileMenuOnDesktop])
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {

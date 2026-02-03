@@ -1,17 +1,12 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createBrowserRouter } from 'react-router-dom'
 import { ProtectedRoute } from './ProtectedRoute'
+import { RootRedirect } from './RootRedirect'
 import { AuthPage } from '../features/auth/pages/AuthPage'
 import { ForgotPasswordPage } from '../features/auth/pages/ForgotPasswordPage'
 import { ResetPasswordPage } from '../features/auth/pages/ResetPasswordPage'
 import { DashboardLayout } from '../features/dashboard/components'
 import { DashboardPage } from '../features/dashboard/pages/DashboardPage'
 import { SettingsPage } from '../features/settings/pages/SettingsPage'
-
-// Root redirect component that checks auth status
-function RootRedirect() {
-  // Redirect to dashboard - if user is not logged in, ProtectedRoute will redirect to auth
-  return <Navigate to="/dashboard" replace />
-}
 
 export const router = createBrowserRouter([
   // Root redirect
