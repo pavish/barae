@@ -5,37 +5,37 @@
 See: .planning/PROJECT.md (updated 2026-02-03)
 
 **Core value:** Users own their content in git — standard Astro projects, portable, not locked into Barae.
-**Current focus:** Phase 1 complete - Ready for Phase 2 (GitHub Integration)
+**Current focus:** Phase 1 complete with UAT gaps resolved - Ready for Phase 2 (GitHub Integration)
 
 ## Current Position
 
 Phase: 1 of 4 (Foundation & Auth) - COMPLETE
-Plan: 01-03 Dashboard Shell - COMPLETE
-Status: Phase 1 verification passed
-Last activity: 2026-02-03 - Completed plan 01-03, Phase 1 fully verified
+Plan: 01-04 Email Verification Gap Closure - COMPLETE
+Status: Phase 1 fully verified, all UAT gaps resolved
+Last activity: 2026-02-04 - Completed plan 01-04, all 16 UAT tests pass
 
 Progress: [██████░░░░] 60%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: ~23min
-- Total execution time: ~72min
+- Total plans completed: 4
+- Average duration: ~22min
+- Total execution time: ~87min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1. Foundation & Auth | 3/3 | ~72min | ~24min |
+| 1. Foundation & Auth | 4/4 | ~87min | ~22min |
 | 1.1 Code Refactoring | 1/1 | ~15min | ~15min |
 | 2. GitHub Integration | 0/2 | - | - |
 | 3. Sites & Templates | 0/2 | - | - |
 | 4. Content & Editor | 0/3 | - | - |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (~15min), 01-02 (~12min), 01-03 (~45min)
-- Trend: 01-03 longer due to email verification flow fixes
+- Last 5 plans: 01-01 (~15min), 01-02 (~12min), 01-03 (~45min), 01-04 (~15min)
+- Trend: 01-04 gap closure plan executed quickly
 
 *Updated after each plan completion*
 
@@ -87,6 +87,13 @@ Recent decisions affecting current work:
 - Adaptive navigation: sidebar on desktop (md+), bottom nav on mobile
 - Theme persistence: localStorage with system option respecting OS preference
 
+**From 01-04 (Gap Closure):**
+- better-auth emailVerification.sendOnSignUp: true for auto-send on signup
+- baseURL set to FRONTEND_URL for correct email links (password reset, verification)
+- Removed custom verify-email endpoint - better-auth handles via catch-all with JWT tokens
+- resend-verification uses auth.api.sendVerificationEmail for JWT token generation
+- Frontend VerifyEmailPage uses authClient.$fetch instead of direct fetch
+
 ### Pending Todos
 
 - Set up GitHub OAuth App for login testing (callback URL: /api/v1/auth/callback/github)
@@ -103,6 +110,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-02-03
-Stopped at: Plan 01-03 complete, Phase 1 fully verified
+Last session: 2026-02-04
+Stopped at: Plan 01-04 complete, all UAT gaps resolved
 Resume action: Begin Phase 2 planning or execute Phase 2 plans
