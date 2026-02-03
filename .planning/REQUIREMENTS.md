@@ -5,7 +5,7 @@
 
 ## Milestone 1: Core MVP
 
-Essential end-to-end flow: login → connect/create repo → pick theme → add content → publish.
+Essential end-to-end flow: login -> connect/create repo -> pick theme -> add content -> publish.
 
 ### Authentication
 
@@ -188,23 +188,55 @@ Explicitly excluded. Documented to prevent scope creep.
 
 ## Traceability
 
-Updated during roadmap creation.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-* | TBD | Pending |
-| GHUB-* | TBD | Pending |
-| SITE-* | TBD | Pending |
-| CONT-* | TBD | Pending |
-| EDIT-* | TBD | Pending |
-| IMG-* | TBD | Pending |
-| DASH-* | TBD | Pending |
-| FEED-* | TBD | Pending |
+| AUTH-01 | Phase 1 | Pending |
+| AUTH-02 | Phase 1 | Pending |
+| AUTH-03 | Phase 1 | Pending |
+| AUTH-04 | Phase 1 | Pending |
+| AUTH-05 | Phase 1 | Pending |
+| AUTH-06 | Phase 1 | Pending |
+| AUTH-07 | Phase 1 | Pending |
+| DASH-01 | Phase 1 | Pending |
+| DASH-02 | Phase 1 | Pending |
+| DASH-03 | Phase 1 | Pending |
+| GHUB-01 | Phase 2 | Pending |
+| GHUB-02 | Phase 2 | Pending |
+| GHUB-03 | Phase 2 | Pending |
+| GHUB-04 | Phase 2 | Pending |
+| GHUB-05 | Phase 2 | Pending |
+| GHUB-06 | Phase 2 | Pending |
+| GHUB-07 | Phase 2 | Pending |
+| SITE-01 | Phase 3 | Pending |
+| SITE-02 | Phase 3 | Pending |
+| SITE-03 | Phase 3 | Pending |
+| SITE-04 | Phase 3 | Pending |
+| SITE-05 | Phase 3 | Pending |
+| SITE-06 | Phase 3 | Pending |
+| SITE-07 | Phase 3 | Pending |
+| FEED-01 | Phase 3 | Pending |
+| CONT-01 | Phase 4 | Pending |
+| CONT-02 | Phase 4 | Pending |
+| CONT-03 | Phase 4 | Pending |
+| CONT-04 | Phase 4 | Pending |
+| CONT-05 | Phase 4 | Pending |
+| CONT-06 | Phase 4 | Pending |
+| CONT-07 | Phase 4 | Pending |
+| CONT-08 | Phase 4 | Pending |
+| EDIT-01 | Phase 4 | Pending |
+| EDIT-02 | Phase 4 | Pending |
+| EDIT-03 | Phase 4 | Pending |
+| EDIT-04 | Phase 4 | Pending |
+| EDIT-05 | Phase 4 | Pending |
+| EDIT-06 | Phase 4 | Pending |
+| EDIT-07 | Phase 4 | Pending |
+| IMG-01 | Phase 4 | Pending |
+| IMG-02 | Phase 4 | Pending |
 
 **Milestone 1 Coverage:**
 - Requirements: 38 total
-- Mapped to phases: 0 (pending roadmap)
+- Mapped to phases: 38/38
 
 ---
 *Requirements defined: 2026-02-03*
-*Last updated: 2026-02-03 — split into Milestone 1 (Core MVP) and Milestone 2 (Full Features)*
+*Last updated: 2026-02-03 — Milestone 1 roadmap created, traceability added*
