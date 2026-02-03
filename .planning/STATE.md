@@ -5,36 +5,37 @@
 See: .planning/PROJECT.md (updated 2026-02-03)
 
 **Core value:** Users own their content in git — standard Astro projects, portable, not locked into Barae.
-**Current focus:** Phase 1 - Foundation & Auth (executing plan 01-03)
+**Current focus:** Phase 1 complete - Ready for Phase 2 (GitHub Integration)
 
 ## Current Position
 
-Phase: 1 of 4 (Foundation & Auth)
-Plan: 01-03 Dashboard Shell (in progress - checkpoint awaiting verification)
-Status: Executing
-Last activity: 2026-02-03 - Tasks 1-3 of plan 01-03 complete, awaiting human verification checkpoint
+Phase: 1 of 4 (Foundation & Auth) - COMPLETE
+Plan: 01-03 Dashboard Shell - COMPLETE
+Status: Phase 1 verification passed
+Last activity: 2026-02-03 - Completed plan 01-03, Phase 1 fully verified
 
-Progress: [████░░░░░░] 40%
+Progress: [██████░░░░] 60%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: ~13.5min
-- Total execution time: ~27min
+- Total plans completed: 3
+- Average duration: ~23min
+- Total execution time: ~72min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1. Foundation & Auth | 2/3 | ~27min | ~13.5min |
+| 1. Foundation & Auth | 3/3 | ~72min | ~24min |
+| 1.1 Code Refactoring | 1/1 | ~15min | ~15min |
 | 2. GitHub Integration | 0/2 | - | - |
 | 3. Sites & Templates | 0/2 | - | - |
 | 4. Content & Editor | 0/3 | - | - |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (~15min), 01-02 (~12min)
-- Trend: Consistent
+- Last 5 plans: 01-01 (~15min), 01-02 (~12min), 01-03 (~45min)
+- Trend: 01-03 longer due to email verification flow fixes
 
 *Updated after each plan completion*
 
@@ -75,7 +76,7 @@ Recent decisions affecting current work:
 - Graceful fallback to console logging when SMTP_HOST not set
 - Config: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, SMTP_SECURE, EMAIL_FROM
 
-**From 01-03 (During Verification):**
+**From 01-03:**
 - Custom `/api/v1/auth/resend-verification` endpoint created
   - better-auth disables `/send-verification-email` when `requireEmailVerification: false`
   - Custom endpoint reads session cookie, extracts token, sends verification email
@@ -83,17 +84,18 @@ Recent decisions affecting current work:
   - Extract token by splitting on `.` before database lookup
   - Database stores raw token, not hashed
 - Added @fastify/cookie for parsing cookies in custom endpoints
-- .env.example updated with Mailpit defaults for local dev
+- Adaptive navigation: sidebar on desktop (md+), bottom nav on mobile
+- Theme persistence: localStorage with system option respecting OS preference
 
 ### Pending Todos
 
 - Set up GitHub OAuth App for login testing (callback URL: /api/v1/auth/callback/github)
-- Complete Phase 1 Plan 01-03 human verification checkpoint
 - Configure production SMTP for email sending
+- Begin Phase 2 planning (GitHub Integration)
 
 ### Blockers/Concerns
 
-- None currently - email verification flow working with Mailpit
+- None currently - Phase 1 complete and verified
 
 ### Roadmap Evolution
 
@@ -102,5 +104,5 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-03
-Stopped at: Plan 01-03 human verification checkpoint (tasks 1-3 complete, email fix applied)
-Resume action: Complete verification checklist at http://localhost:5173, check emails at http://localhost:8025
+Stopped at: Plan 01-03 complete, Phase 1 fully verified
+Resume action: Begin Phase 2 planning or execute Phase 2 plans

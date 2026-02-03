@@ -12,7 +12,7 @@ Barae delivers a git-backed blogging platform in 4 phases: authenticate users, c
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & Auth** - User authentication with dashboard shell
+- [x] **Phase 1: Foundation & Auth** - User authentication with dashboard shell
 - [x] **Phase 1.1: Code Refactoring** - Improve code quality before proceeding (INSERTED)
 - [ ] **Phase 2: GitHub Integration** - GitHub App installation and repo access
 - [ ] **Phase 3: Sites & Templates** - Site creation with Astro templates and GitHub Pages
@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 01-01-PLAN.md — Backend auth setup with better-auth + Frontend scaffold with Vite
 - [x] 01-02-PLAN.md — Auth UI (login/signup/OAuth) + Email integration (SMTP/Nodemailer)
-- [ ] 01-03-PLAN.md — Dashboard shell with responsive navigation + Settings page
+- [x] 01-03-PLAN.md — Dashboard shell with responsive navigation + Settings page
 
 ### Phase 1.1: Code Refactoring (INSERTED)
 **Goal**: Improve code quality and structure before building on the foundation
@@ -105,7 +105,7 @@ Phases execute in numeric order: 1 -> 1.1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Auth | 2/3 | In progress | - |
+| 1. Foundation & Auth | 3/3 | Complete | 2026-02-03 |
 | 1.1 Code Refactoring | 1/1 | Complete | 2026-02-03 |
 | 2. GitHub Integration | 0/2 | Not started | - |
 | 3. Sites & Templates | 0/2 | Not started | - |
