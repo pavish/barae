@@ -3,6 +3,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 import * as schema from './schema.js'
+import { sendVerificationEmail, sendPasswordResetEmail } from '../lib/email.js'
 
 // Create a separate postgres client for better-auth
 // This avoids dependency on Fastify config plugin
@@ -32,13 +33,12 @@ export const auth = betterAuth({
     minPasswordLength: 8,
     requireEmailVerification: false, // Non-blocking per CONTEXT.md - users can access dashboard immediately
     async sendVerificationEmail({ user, url }) {
-      // Placeholder - actual email sending implemented in Plan 03
       // Don't await to prevent timing attacks
-      console.log(`[Auth] Verification email for ${user.email}: ${url}`)
+      sendVerificationEmail(user.email, url)
     },
     async sendResetPassword({ user, url }) {
-      // Placeholder - actual email sending implemented in Plan 03
-      console.log(`[Auth] Password reset email for ${user.email}: ${url}`)
+      // Don't await to prevent timing attacks
+      sendPasswordResetEmail(user.email, url)
     },
   },
 
