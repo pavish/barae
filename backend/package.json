@@ -43,7 +43,6 @@
   },
   "homepage": "https://github.com/pavish/barae#readme",
   "dependencies": {
-    "drizzle-kit": "^0.31.8",
     "@fastify/autoload": "^6.3.1",
     "@fastify/cors": "^11.2.0",
     "@fastify/env": "^5.0.3",
@@ -51,16 +50,18 @@
     "@fastify/type-provider-typebox": "^6.1.0",
     "@sinclair/typebox": "^0.34.47",
     "better-auth": "^1.4.18",
+    "drizzle-kit": "^0.31.8",
     "drizzle-orm": "^0.45.1",
     "drizzle-typebox": "^0.3.3",
     "fastify": "^5.7.0",
     "fastify-plugin": "^5.1.0",
-    "postgres": "^3.4.8",
-    "resend": "^6.9.1"
+    "nodemailer": "^7.0.13",
+    "postgres": "^3.4.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@types/node": "^25.0.8",
+    "@types/nodemailer": "^7.0.9",
     "drizzle-seed": "^0.3.1",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",

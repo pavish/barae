@@ -19,9 +19,13 @@ const envVarsSchema = Type.Object({
   GITHUB_CLIENT_SECRET: Type.Optional(Type.String()),
   // Frontend URL for CORS
   FRONTEND_URL: Type.Optional(Type.String({ default: 'http://localhost:5173' })),
-  // Email - Resend (optional, emails logged to console if not set)
-  RESEND_API_KEY: Type.Optional(Type.String()),
-  EMAIL_FROM: Type.Optional(Type.String()),
+  // Email - SMTP (optional, emails logged to console if not set)
+  SMTP_HOST: Type.Optional(Type.String()),
+  SMTP_PORT: Type.Optional(Type.Number({ default: 587 })),
+  SMTP_USER: Type.Optional(Type.String()),
+  SMTP_PASSWORD: Type.Optional(Type.String()),
+  SMTP_SECURE: Type.Optional(Type.Boolean({ default: false })),
+  EMAIL_FROM: Type.Optional(Type.String({ default: 'Barae <noreply@barae.app>' })),
 })
 
 async function config(fastify: FastifyInstance) {

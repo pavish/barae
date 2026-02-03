@@ -19,6 +19,17 @@ services:
       timeout: 3s
       retries: 30
 
+  mailpit:
+    container_name: barae-dev-mailpit
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "8025:8025"  # Web UI
+      - "1025:1025"  # SMTP
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+
   backend:
     container_name: barae-dev-backend
     build:
@@ -27,10 +38,16 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      mailpit:
+        condition: service_started
     env_file: .env
     environment:
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
+      # Default to Mailpit for dev (override in .env for real SMTP)
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
     ports:
       - "${SERVER_PORT:-3000}:3000"
     volumes:

@@ -17,6 +17,16 @@ services:
       timeout: 2s
       retries: 10
 
+  mailpit:
+    container_name: barae-test-mailpit
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"  # Web UI
+      - "1025:1025"  # SMTP
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+
   backend:
     container_name: barae-test-backend
     build:
@@ -25,6 +35,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      mailpit:
+        condition: service_started
     environment:
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
@@ -36,6 +48,11 @@ services:
       APP_SECRET: test-secret-for-ci-at-least-32-characters-long
       FRONTEND_URL: http://localhost:5173
       MIGRATE_ON_START: "true"
+      # SMTP - Mailpit for local testing
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      SMTP_SECURE: "false"
+      EMAIL_FROM: "Barae <noreply@barae.local>"
     ports:
       - "3000:3000"
     healthcheck:
