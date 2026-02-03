@@ -1,5 +1,6 @@
 import fastify, { FastifyInstance } from 'fastify'
 import cors from '@fastify/cors'
+import cookie from '@fastify/cookie'
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { sql } from 'drizzle-orm'
 import config from './config.js'
@@ -15,6 +16,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   // Register core plugins
   await app.register(config)
   await app.register(db)
+  await app.register(cookie)
 
   // Register CORS after config is available
   await app.register(cors, {

@@ -44,6 +44,7 @@
   "homepage": "https://github.com/pavish/barae#readme",
   "dependencies": {
     "@fastify/autoload": "^6.3.1",
+    "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.2.0",
     "@fastify/env": "^5.0.3",
     "@fastify/error": "^4.2.0",

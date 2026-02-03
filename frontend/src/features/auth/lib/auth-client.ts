@@ -53,17 +53,17 @@ export async function resetPassword(params: {
   }
 }
 
-// Send verification email
-export async function sendVerificationEmail(params: {
+// Send verification email (uses custom endpoint since requireEmailVerification is false)
+export async function sendVerificationEmail(_params: {
   email: string
   callbackURL?: string
 }): Promise<ApiResponse<{ status: boolean }>> {
   try {
-    const response = await authClient.$fetch('/send-verification-email', {
+    const response = await authClient.$fetch('/resend-verification', {
       method: 'POST',
-      body: params,
+      body: {},
     })
-    return { data: response.data as { status: boolean }, error: null }
+    return { data: { status: !!(response.data as { success?: boolean })?.success }, error: null }
   } catch (err) {
     const error = err as Error
     return { data: null, error: { message: error.message || 'Failed to send verification email' } }
