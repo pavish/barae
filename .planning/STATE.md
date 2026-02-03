@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-03)
 
 **Core value:** Users own their content in git — standard Astro projects, portable, not locked into Barae.
-**Current focus:** Phase 1.2 Code Review - Frontend review complete, integration review pending
+**Current focus:** Phase 2 GitHub Integration - Connect users' GitHub accounts for repository access
 
 ## Current Position
 
-Phase: 1.2 of 4 (Code Review) - COMPLETE
-Plan: 03 of 3 (Shared/Settings Review & Final Report) - COMPLETE
-Status: Phase 1.2 complete, ready for Phase 2 (GitHub Integration)
-Last activity: 2026-02-04 - Completed plan 01.2-03, consolidated code review with better-auth analysis
+Phase: 1.3 of 4 (Review Fixes) - COMPLETE
+Plan: 01 of 1 (Code Review Recommendations) - COMPLETE
+Status: Phase 1.3 complete, ready for Phase 2
+Last activity: 2026-02-04 - Completed 01.3-01 (Code Review Fixes)
 
-Progress: [███████░░░] 70%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: ~14min
-- Total execution time: ~100min
+- Total plans completed: 8
+- Average duration: ~13min
+- Total execution time: ~103min
 
 **By Phase:**
 
@@ -30,13 +30,14 @@ Progress: [███████░░░] 70%
 | 1. Foundation & Auth | 4/4 | ~87min | ~22min |
 | 1.1 Code Refactoring | 1/1 | ~15min | ~15min |
 | 1.2 Code Review | 3/3 | ~13min | ~4min |
+| 1.3 Review Fixes | 1/1 | ~3min | ~3min |
 | 2. GitHub Integration | 0/2 | - | - |
 | 3. Sites & Templates | 0/2 | - | - |
 | 4. Content & Editor | 0/3 | - | - |
 
 **Recent Trend:**
-- Last 5 plans: 01-04 (~15min), 01.1-01 (~15min), 01.2-01 (~2min), 01.2-02 (~3min), 01.2-03 (~8min)
-- Trend: Code review plans execute quickly (analysis only, no implementation)
+- Last 5 plans: 01.1-01 (~15min), 01.2-01 (~2min), 01.2-02 (~3min), 01.2-03 (~8min), 01.3-01 (~3min)
+- Trend: Implementation fixes execute quickly when well-planned
 
 *Updated after each plan completion*
 
@@ -124,26 +125,31 @@ Recent decisions affecting current work:
 - Consolidated report: 53 files, 0 critical, 2 important, 19 low issues
 - Phase 2 recommendations: rate limiting + APP_SECRET minLength validation
 
+**From 01.3-01 (Review Fixes):**
+- Rate limiting on resend-verification: 3 requests per hour via @fastify/rate-limit
+- Scoped plugin pattern: rate limiting isolated to single endpoint via fastify.register scope
+- APP_SECRET validation: minLength: 32 enforced at config load time
+- ErrorBoundary: class component with styled fallback wraps entire React app
+- SPA navigation: Header logo uses React Router Link instead of anchor tag
+
 ### Pending Todos
 
 - Set up GitHub OAuth App for login testing (callback URL: /api/v1/auth/callback/github)
 - Configure production SMTP for email sending
-- Address immediate recommendations from 01.2-01 review (rate limiting, APP_SECRET validation)
-- Consider accessibility improvements from 01.2-02 (ARIA roles, ErrorBoundary)
+- Consider remaining accessibility improvements from 01.2-02 (ARIA roles, icon deduplication)
 
 ### Blockers/Concerns
 
-- None blocking. Two "important" recommendations from code review to consider before Phase 2:
-  1. Add rate limiting to /resend-verification endpoint
-  2. Add minLength: 32 to APP_SECRET validation
+- None blocking. All "important" code review recommendations addressed in Phase 1.3.
 
 ### Roadmap Evolution
 
 - Phase 1.1 inserted after Phase 1: Code Refactoring (URGENT) - User requested quality improvements before continuing
 - Phase 1.2 inserted after Phase 1.1: Code Review - Thorough review of implemented code for quality and issues
+- Phase 1.3 inserted after Phase 1.2: Review Fixes (URGENT) - Address 2 important + 2 low recommendations before Phase 2
 
 ## Session Continuity
 
 Last session: 2026-02-04
-Stopped at: Completed plan 01.2-03 (Shared/Settings Review & Final Report) - Phase 1.2 complete
-Resume action: Plan Phase 2 (GitHub Integration) or address Phase 1.2 recommendations
+Stopped at: Completed Phase 1.3 (Review Fixes)
+Resume action: Plan and execute Phase 2 (GitHub Integration)
