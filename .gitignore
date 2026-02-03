@@ -5,6 +5,9 @@ node_modules/
 # Backend
 dist/
 
+# Frontend
+.vite
+
 # Logs
 logs
 *.log
@@ -24,3 +27,4 @@ npm-debug.log*
 # Claude
 
 .claude
+.planning/debug
