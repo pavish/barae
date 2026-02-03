@@ -14,6 +14,11 @@ const envVarsSchema = Type.Object({
   POSTGRES_USER: Type.String(),
   POSTGRES_PASSWORD: Type.String(),
   APP_SECRET: Type.String(),
+  // Auth - GitHub OAuth (optional, GitHub login disabled if not set)
+  GITHUB_CLIENT_ID: Type.Optional(Type.String()),
+  GITHUB_CLIENT_SECRET: Type.Optional(Type.String()),
+  // Frontend URL for CORS
+  FRONTEND_URL: Type.Optional(Type.String({ default: 'http://localhost:5173' })),
 })
 
 async function config(fastify: FastifyInstance) {

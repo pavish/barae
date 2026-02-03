@@ -3,6 +3,7 @@ import cors from '@fastify/cors'
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import config from './config.js'
 import db from './db/index.js'
+import authPlugin from './plugins/auth.js'
 
 const server = fastify({
   logger: true,
@@ -13,9 +14,13 @@ async function setupServer() {
   await server.register(config)
   await server.register(db)
   await server.register(cors, {
-    origin: '*',
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true, // Allow cookies for auth
   })
+
+  // Register auth plugin after CORS (better-auth needs CORS configured first)
+  await server.register(authPlugin)
 }
 
 async function startServer() {
