@@ -3,34 +3,14 @@ import { ProtectedRoute } from './ProtectedRoute'
 import { AuthPage } from '../features/auth/pages/AuthPage'
 import { ForgotPasswordPage } from '../features/auth/pages/ForgotPasswordPage'
 import { ResetPasswordPage } from '../features/auth/pages/ResetPasswordPage'
-
-// Placeholder pages - will be replaced with actual components in Plan 03
-function DashboardPage() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-[var(--color-background)]">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-[var(--color-foreground)]">Dashboard</h1>
-        <p className="mt-2 text-[var(--color-muted-foreground)]">Welcome! Dashboard coming soon.</p>
-      </div>
-    </div>
-  )
-}
-
-function SettingsPage() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-[var(--color-background)]">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-[var(--color-foreground)]">Settings</h1>
-        <p className="mt-2 text-[var(--color-muted-foreground)]">Settings placeholder</p>
-      </div>
-    </div>
-  )
-}
+import { DashboardLayout } from '../features/dashboard/components'
+import { DashboardPage } from '../features/dashboard/pages/DashboardPage'
+import { SettingsPage } from '../features/settings/pages/SettingsPage'
 
 // Root redirect component that checks auth status
 function RootRedirect() {
-  // Redirect to auth - if user is logged in, AuthPage will redirect to dashboard
-  return <Navigate to="/auth" replace />
+  // Redirect to dashboard - if user is not logged in, ProtectedRoute will redirect to auth
+  return <Navigate to="/dashboard" replace />
 }
 
 export const router = createBrowserRouter([
@@ -52,17 +32,22 @@ export const router = createBrowserRouter([
     path: '/auth/reset-password',
     element: <ResetPasswordPage />,
   },
-  // Protected routes
+  // Protected routes with DashboardLayout
   {
     element: <ProtectedRoute />,
     children: [
       {
-        path: '/dashboard',
-        element: <DashboardPage />,
-      },
-      {
-        path: '/settings',
-        element: <SettingsPage />,
+        element: <DashboardLayout />,
+        children: [
+          {
+            path: '/dashboard',
+            element: <DashboardPage />,
+          },
+          {
+            path: '/settings',
+            element: <SettingsPage />,
+          },
+        ],
       },
     ],
   },
