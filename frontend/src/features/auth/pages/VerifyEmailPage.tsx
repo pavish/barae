@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams, useNavigate, Link } from 'react-router-dom'
 import { Card } from '../../../shared/components'
+import { authClient } from '../lib/auth-client'
 
 type VerifyState = 'loading' | 'success' | 'error'
 
@@ -21,18 +22,20 @@ export function VerifyEmailPage() {
 
     async function verifyEmail() {
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/v1/auth/verify-email?token=${token}`
-        )
-        const data = await response.json()
+        // Use authClient.$fetch which respects baseURL and basePath
+        // This calls better-auth's built-in verify-email endpoint
+        const response = await authClient.$fetch<{ status?: boolean; user?: unknown }>('/verify-email', {
+          method: 'GET',
+          query: { token },
+        })
 
-        if (response.ok) {
+        if (response.data?.status || response.data?.user) {
           setState('success')
           // Redirect to dashboard after 2 seconds
           setTimeout(() => navigate('/dashboard'), 2000)
         } else {
           setState('error')
-          setErrorMessage(data.error || 'Verification failed')
+          setErrorMessage(response.error?.message || 'Verification failed')
         }
       } catch {
         setState('error')
