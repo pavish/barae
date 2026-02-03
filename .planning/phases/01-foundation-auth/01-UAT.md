@@ -1,9 +1,9 @@
 ---
-status: complete
+status: diagnosed
 phase: 01-foundation-auth
 source: [01-01-SUMMARY.md, 01-02-SUMMARY.md, 01-03-SUMMARY.md]
 started: 2026-02-03T17:00:00Z
-updated: 2026-02-03T17:15:00Z
+updated: 2026-02-03T17:20:00Z
 ---
 
 ## Current Test
@@ -99,27 +99,38 @@ skipped: 0
   reason: "User reported: Resend works. The first default mail which should have been sent once the user signs up does not work, there's no mail there. Only clicking on the resend button sends a mail."
   severity: major
   test: 5
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "better-auth requires emailVerification.sendOnSignUp: true to auto-send on signup. Current config only has sendVerificationEmail inside emailAndPassword block which is only for resend flows, not signup."
+  artifacts:
+    - path: "backend/src/features/auth/service.ts"
+      issue: "Missing emailVerification config block with sendOnSignUp: true"
+  missing:
+    - "Add emailVerification block with sendOnSignUp: true and sendVerificationEmail handler"
+  debug_session: ".planning/debug/signup-verification-email.md"
 
 - truth: "Email verification link works and verifies the user"
   status: failed
   reason: "User reported: It says verification failed with invalid or expired token and the user isn't verified."
   severity: blocker
   test: 6
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "Two incompatible verification systems: custom endpoint creates random hex tokens stored in DB, but better-auth uses JWT tokens never stored. Custom /api/v1/auth/verify-email intercepts all requests and does DB lookup for JWT tokens that don't exist."
+  artifacts:
+    - path: "backend/src/features/auth/routes.ts"
+      issue: "Custom verify-email endpoint (lines 86-149) creates hex tokens and does DB lookup, incompatible with better-auth JWT tokens"
+    - path: "backend/src/features/auth/service.ts"
+      issue: "better-auth sendVerificationEmail passes JWT URL to email service"
+  missing:
+    - "Remove custom verify-email endpoint OR align resend-verification to generate JWT tokens compatible with better-auth"
+  debug_session: ".planning/debug/email-verification-token-invalid.md"
 
 - truth: "Password reset link uses frontend URL"
   status: failed
   reason: "User reported: It does not go to the correct url, it uses the server url instead of the frontend url. For prod, it should be the correct app url. Otherwise, it works."
   severity: major
   test: 8
-  root_cause: ""
-  artifacts: []
-  missing: []
-  debug_session: ""
+  root_cause: "betterAuth() config missing baseURL option. Without it, better-auth infers URL from incoming request which points to backend server."
+  artifacts:
+    - path: "backend/src/features/auth/service.ts"
+      issue: "Missing baseURL in betterAuth config (has basePath but not baseURL)"
+  missing:
+    - "Add baseURL: fastify.config.FRONTEND_URL to betterAuth() config"
+  debug_session: ".planning/debug/password-reset-url.md"
