@@ -103,10 +103,10 @@ export function createAuthService(fastify: FastifyInstance) {
 
 ```typescript
 // WRONG - direct process.env access
-const apiKey = process.env.RESEND_API_KEY
+const smtpHost = process.env.SMTP_HOST
 
 // CORRECT - via Fastify config
-const apiKey = fastify.config.RESEND_API_KEY
+const smtpHost = fastify.config.SMTP_HOST
 ```
 
 ## Route Versioning

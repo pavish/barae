@@ -167,5 +167,19 @@ Note: Without Resend configuration, emails are logged to console - auth flows st
 - Resend: Configure RESEND_API_KEY for real emails
 
 ---
+
+## Post-Completion Updates
+
+**2026-02-03: Email changed from Resend to SMTP**
+
+The email implementation was refactored to use standard SMTP via Nodemailer instead of Resend API:
+- Removed `resend` dependency, added `nodemailer`
+- Config changed: `RESEND_API_KEY` → `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_SECURE`
+- Added Mailpit to Docker compose files for local email testing (UI at http://localhost:8025)
+- Same graceful fallback: without SMTP_HOST, emails log to console
+
+See commit `c0906c0` for details.
+
+---
 *Phase: 01-foundation-auth*
 *Completed: 2026-02-03*

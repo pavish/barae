@@ -33,8 +33,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Backend auth setup with better-auth + Frontend scaffold with Vite
-- [ ] 01-02-PLAN.md — Auth UI (login/signup/OAuth) + Email integration with Resend
+- [x] 01-01-PLAN.md — Backend auth setup with better-auth + Frontend scaffold with Vite
+- [x] 01-02-PLAN.md — Auth UI (login/signup/OAuth) + Email integration (SMTP/Nodemailer)
 - [ ] 01-03-PLAN.md — Dashboard shell with responsive navigation + Settings page
 
 ### Phase 1.1: Code Refactoring (INSERTED)

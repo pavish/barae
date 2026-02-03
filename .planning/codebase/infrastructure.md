@@ -27,6 +27,7 @@ docker compose -f compose.dev.yml exec backend npm run db:migrate
 # - Frontend: http://localhost:5173
 # - Backend API: http://localhost:3000
 # - Database: localhost:5432
+# - Mailpit (email UI): http://localhost:8025
 ```
 
 ### Testing (ephemeral, for CI)
@@ -38,6 +39,9 @@ docker compose -f compose.test.yml up --build
 # Or run detached and wait for health
 docker compose -f compose.test.yml up -d --build
 docker compose -f compose.test.yml exec backend wget -qO- http://localhost:3000/health
+
+# View emails sent during testing
+open http://localhost:8025
 
 # Cleanup
 docker compose -f compose.test.yml down -v
@@ -56,11 +60,11 @@ docker compose -f compose.prod.yml up -d --build
 
 ## Docker Compose Files
 
-| File | Purpose | Database | Hot Reload |
-|------|---------|----------|------------|
-| `compose.dev.yml` | Local development | Persistent volume | Yes |
-| `compose.test.yml` | CI/Testing | tmpfs (ephemeral) | No |
-| `compose.prod.yml` | Production | Persistent volume | No |
+| File | Purpose | Database | Hot Reload | Mailpit |
+|------|---------|----------|------------|---------|
+| `compose.dev.yml` | Local development | Persistent volume | Yes | Yes |
+| `compose.test.yml` | CI/Testing | tmpfs (ephemeral) | No | Yes |
+| `compose.prod.yml` | Production | Persistent volume | No | No |
 
 ## Services
 
@@ -81,6 +85,16 @@ docker compose -f compose.prod.yml up -d --build
 
 - **Dev target**: Vite dev server with HMR on port 5173
 - **Prod target**: nginx serving static files, proxies /api to backend
+
+### Mailpit (Email Testing)
+
+Local SMTP server that captures all outgoing emails for inspection.
+
+- **SMTP**: Port 1025 (for backend to send to)
+- **Web UI**: http://localhost:8025 (view captured emails)
+- **Purpose**: Test verification emails, password reset, etc. without real SMTP
+
+All emails sent by the backend appear in the Mailpit web UI. Click verification links directly from there.
 
 ## Health Checks
 
@@ -151,6 +165,11 @@ docker compose -f compose.dev.yml exec db psql -U barae -d barae
 - Ensure database is running and healthy
 - Check migration files in backend/migrations/
 
+**Emails not appearing in Mailpit**
+- Verify Mailpit is running: `docker compose -f compose.dev.yml ps mailpit`
+- Check backend logs for SMTP connection errors
+- Ensure SMTP_HOST is set to `mailpit` (not localhost) in container
+
 ## API Testing
 
 ### Health check
@@ -185,5 +204,13 @@ See `.env.example` for all available configuration options.
 
 ### Optional
 - `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` - GitHub OAuth
-- `RESEND_API_KEY` - Email sending (otherwise logged to console)
 - `FRONTEND_URL` - CORS origin (default: http://localhost:5173)
+
+### Email (SMTP)
+- `SMTP_HOST` - SMTP server (default: `mailpit` in Docker dev/test)
+- `SMTP_PORT` - SMTP port (default: 587, use 1025 for Mailpit)
+- `SMTP_USER`, `SMTP_PASSWORD` - SMTP credentials (optional for Mailpit)
+- `SMTP_SECURE` - Use TLS (default: false)
+- `EMAIL_FROM` - From address (default: `Barae <noreply@barae.app>`)
+
+Without `SMTP_HOST`, emails are logged to console instead of sent.
