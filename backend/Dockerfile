@@ -65,12 +65,21 @@ RUN addgroup --system --gid 1001 nodejs && \
 COPY --from=build --chown=barae:nodejs /app/dist ./dist
 COPY --from=build --chown=barae:nodejs /app/node_modules ./node_modules
 COPY --from=build --chown=barae:nodejs /app/package.json ./
+COPY --chown=barae:nodejs docker-entrypoint.sh ./
+
+# Make entrypoint executable
+RUN chmod +x docker-entrypoint.sh
 
 # Switch to non-root user
 USER barae
 
+ENTRYPOINT ["./docker-entrypoint.sh"]
+
 EXPOSE 3000
 
 ENV NODE_ENV=production
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
 
 CMD ["node", "dist/index.js"]

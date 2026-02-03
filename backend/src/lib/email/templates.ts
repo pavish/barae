@@ -1,37 +1,5 @@
-import { Resend } from 'resend'
-
-// Initialize Resend client (only if API key is provided)
-const resendApiKey = process.env.RESEND_API_KEY
-const resend = resendApiKey ? new Resend(resendApiKey) : null
-
-// Default from address - uses Resend's dev domain if no custom domain
-const defaultFrom = process.env.EMAIL_FROM || 'Barae <onboarding@resend.dev>'
-
-// Log warning if Resend is not configured
-if (!resend) {
-  console.warn(
-    '[Email] RESEND_API_KEY not set - emails will be logged to console instead of sent'
-  )
-}
-
-/**
- * Send verification email to user after signup.
- * Fire-and-forget to prevent timing attacks.
- */
-export function sendVerificationEmail(email: string, url: string): void {
-  if (!resend) {
-    console.log(`[Email] Verification email for ${email}:`)
-    console.log(`  URL: ${url}`)
-    return
-  }
-
-  // Don't await - fire and forget to prevent timing attacks
-  resend.emails
-    .send({
-      from: defaultFrom,
-      to: email,
-      subject: 'Verify your Barae account',
-      html: `
+export function verificationEmailHtml(url: string): string {
+  return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -56,31 +24,11 @@ export function sendVerificationEmail(email: string, url: string): void {
   </div>
 </body>
 </html>
-      `,
-    })
-    .catch((err) => {
-      console.error('[Email] Failed to send verification email:', err)
-    })
+  `.trim()
 }
 
-/**
- * Send password reset email to user.
- * Fire-and-forget to prevent timing attacks.
- */
-export function sendPasswordResetEmail(email: string, url: string): void {
-  if (!resend) {
-    console.log(`[Email] Password reset email for ${email}:`)
-    console.log(`  URL: ${url}`)
-    return
-  }
-
-  // Don't await - fire and forget to prevent timing attacks
-  resend.emails
-    .send({
-      from: defaultFrom,
-      to: email,
-      subject: 'Reset your Barae password',
-      html: `
+export function passwordResetEmailHtml(url: string): string {
+  return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -105,9 +53,5 @@ export function sendPasswordResetEmail(email: string, url: string): void {
   </div>
 </body>
 </html>
-      `,
-    })
-    .catch((err) => {
-      console.error('[Email] Failed to send password reset email:', err)
-    })
+  `.trim()
 }

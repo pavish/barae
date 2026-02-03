@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-03)
 
 **Core value:** Users own their content in git — standard Astro projects, portable, not locked into Barae.
-**Current focus:** Phase 1 - Foundation & Auth
+**Current focus:** Phase 1.1 - Code Refactoring
 
 ## Current Position
 
-Phase: 1 of 4 (Foundation & Auth)
-Plan: 2 of 3 in current phase
+Phase: 1.1 of 4 (Code Refactoring)
+Plan: Backend refactoring complete
 Status: In progress
-Last activity: 2026-02-03 - Completed 01-02-PLAN.md (Auth UI & Email Integration)
+Last activity: 2026-02-03 - Completed backend refactoring (single DB connection, versioned routes, plugin patterns)
 
-Progress: [██░░░░░░░░] 20%
+Progress: [███░░░░░░░] 30%
 
 ## Performance Metrics
 
@@ -60,15 +60,29 @@ Recent decisions affecting current work:
 - Graceful fallback to console logging when RESEND_API_KEY not set
 - Form validation: Zod schema + react-hook-form zodResolver pattern
 
+**From 01.1 (Backend Refactoring):**
+- Single DB connection: auth uses `fastify.db.do` via factory pattern (was duplicate connection)
+- Versioned routes: all auth endpoints now at `/api/v1/auth/*`
+- Config access: all via `fastify.config.*` (no direct process.env in src/)
+- Plugin patterns: scoped type declarations in each plugin file
+- Email service: Fastify plugin with proper dependency chain
+- Feature modules: routes, service, handler, contracts pattern
+- Health check: `/health` endpoint with DB connectivity test
+- Docker: compose.test.yml for ephemeral testing, auto-migrations via entrypoint
+
 ### Pending Todos
 
-- Apply database migration after POSTGRES_* env vars configured
-- Set up GitHub OAuth App for login testing
+- Set up GitHub OAuth App for login testing (callback URL now: /api/v1/auth/callback/github)
 - Configure Resend for production email sending
+- Complete Phase 1 Plan 03-03 (Dashboard shell)
 
 ### Blockers/Concerns
 
-- Database must be running with credentials in .env before auth can be tested
+- None currently - test environment works with `docker compose -f compose.test.yml up --build`
+
+### Roadmap Evolution
+
+- Phase 1.1 inserted after Phase 1: Code Refactoring (URGENT) - User requested quality improvements before continuing
 
 ## Session Continuity
 

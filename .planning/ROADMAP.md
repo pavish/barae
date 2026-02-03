@@ -13,6 +13,7 @@ Barae delivers a git-backed blogging platform in 4 phases: authenticate users, c
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Foundation & Auth** - User authentication with dashboard shell
+- [x] **Phase 1.1: Code Refactoring** - Improve code quality before proceeding (INSERTED)
 - [ ] **Phase 2: GitHub Integration** - GitHub App installation and repo access
 - [ ] **Phase 3: Sites & Templates** - Site creation with Astro templates and GitHub Pages
 - [ ] **Phase 4: Content & Editor** - Content management with dual-mode editor
@@ -35,6 +36,20 @@ Plans:
 - [ ] 01-01-PLAN.md — Backend auth setup with better-auth + Frontend scaffold with Vite
 - [ ] 01-02-PLAN.md — Auth UI (login/signup/OAuth) + Email integration with Resend
 - [ ] 01-03-PLAN.md — Dashboard shell with responsive navigation + Settings page
+
+### Phase 1.1: Code Refactoring (INSERTED)
+**Goal**: Improve code quality and structure before building on the foundation
+**Depends on**: Phase 1
+**Requirements**: None (technical debt / quality improvement)
+**Success Criteria** (what must be TRUE):
+  1. Code follows consistent patterns and conventions ✓
+  2. Components are properly organized and reusable ✓
+  3. No unnecessary complexity or dead code ✓
+  4. Clear separation of concerns ✓
+**Plans**: 1 plan (completed)
+
+Plans:
+- [x] 01.1-01: Backend refactoring (single DB, versioned routes, plugin patterns, infra docs)
 
 ### Phase 2: GitHub Integration
 **Goal**: Barae can operate on user's GitHub repositories via installed App
@@ -86,11 +101,12 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4
+Phases execute in numeric order: 1 -> 1.1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Auth | 0/3 | Planned | - |
+| 1. Foundation & Auth | 2/3 | In progress | - |
+| 1.1 Code Refactoring | 1/1 | Complete | 2026-02-03 |
 | 2. GitHub Integration | 0/2 | Not started | - |
 | 3. Sites & Templates | 0/2 | Not started | - |
 | 4. Content & Editor | 0/3 | Not started | - |

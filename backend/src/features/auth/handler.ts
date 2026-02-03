@@ -1,9 +1,8 @@
-import fp from 'fastify-plugin'
-import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
-import { auth } from '../auth/index.js'
+import type { FastifyRequest, FastifyReply } from 'fastify'
+import type { AuthService } from './service.js'
 
-async function authPlugin(fastify: FastifyInstance) {
-  fastify.all('/api/auth/*', async (request: FastifyRequest, reply: FastifyReply) => {
+export function createAuthHandler(auth: AuthService) {
+  return async function authHandler(request: FastifyRequest, reply: FastifyReply) {
     // Construct the full URL
     const url = new URL(request.url, `http://${request.headers.host}`)
 
@@ -39,12 +38,5 @@ async function authPlugin(fastify: FastifyInstance) {
     // Send response body
     const body = await response.text()
     return reply.send(body)
-  })
-
-  fastify.log.info('Auth plugin registered at /api/auth/*')
+  }
 }
-
-export default fp(authPlugin, {
-  name: 'auth',
-  dependencies: ['db'], // Auth plugin depends on db being available
-})
