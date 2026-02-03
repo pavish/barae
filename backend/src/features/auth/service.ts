@@ -19,6 +19,17 @@ export function createAuthService(fastify: FastifyInstance) {
 
     secret: fastify.config.APP_SECRET,
 
+    // baseURL is used for generating email links (password reset, etc.)
+    baseURL: fastify.config.FRONTEND_URL || 'http://localhost:5173',
+
+    // Top-level email verification config - triggers on signup
+    emailVerification: {
+      sendOnSignUp: true,
+      sendVerificationEmail: async ({ user, url }: { user: { email: string }; url: string }) => {
+        fastify.email.sendVerificationEmail(user.email, url)
+      },
+    },
+
     emailAndPassword: {
       enabled: true,
       minPasswordLength: 8,
