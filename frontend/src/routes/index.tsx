@@ -1,27 +1,16 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { ProtectedRoute } from './ProtectedRoute'
+import { AuthPage } from '../features/auth/pages/AuthPage'
+import { ForgotPasswordPage } from '../features/auth/pages/ForgotPasswordPage'
+import { ResetPasswordPage } from '../features/auth/pages/ResetPasswordPage'
 
-// Placeholder pages - will be replaced with actual components
-function AuthPage() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-[var(--color-background)]">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-[var(--color-foreground)]">Barae</h1>
-        <p className="mt-2 text-[var(--color-muted-foreground)]">Auth page placeholder</p>
-        <p className="mt-4 text-sm text-[var(--color-muted-foreground)]">
-          Login and signup forms will be implemented in Plan 02
-        </p>
-      </div>
-    </div>
-  )
-}
-
+// Placeholder pages - will be replaced with actual components in Plan 03
 function DashboardPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[var(--color-background)]">
       <div className="text-center">
         <h1 className="text-3xl font-bold text-[var(--color-foreground)]">Dashboard</h1>
-        <p className="mt-2 text-[var(--color-muted-foreground)]">Dashboard placeholder</p>
+        <p className="mt-2 text-[var(--color-muted-foreground)]">Welcome! Dashboard coming soon.</p>
       </div>
     </div>
   )
@@ -40,8 +29,7 @@ function SettingsPage() {
 
 // Root redirect component that checks auth status
 function RootRedirect() {
-  // For now, redirect to auth since we don't have session check at route level
-  // This will be improved when auth UI is complete
+  // Redirect to auth - if user is logged in, AuthPage will redirect to dashboard
   return <Navigate to="/auth" replace />
 }
 
@@ -55,6 +43,14 @@ export const router = createBrowserRouter([
   {
     path: '/auth',
     element: <AuthPage />,
+  },
+  {
+    path: '/auth/forgot-password',
+    element: <ForgotPasswordPage />,
+  },
+  {
+    path: '/auth/reset-password',
+    element: <ResetPasswordPage />,
   },
   // Protected routes
   {

@@ -5,4 +5,12 @@ export const authClient = createAuthClient({
 })
 
 // Export individual methods for cleaner imports
-export const { signIn, signUp, signOut, useSession } = authClient
+export const {
+  signIn,
+  signUp,
+  signOut,
+  useSession,
+  forgetPassword,
+  resetPassword,
+  sendVerificationEmail,
+} = authClient
