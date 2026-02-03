@@ -15,6 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation & Auth** - User authentication with dashboard shell
 - [x] **Phase 1.1: Code Refactoring** - Improve code quality before proceeding (INSERTED)
 - [x] **Phase 1.2: Code Review** - Thoroughly review implemented code for quality and issues (INSERTED)
+- [x] **Phase 1.3: Review Fixes** - Address recommendations from code review before Phase 2 (INSERTED)
 - [ ] **Phase 2: GitHub Integration** - GitHub App installation and repo access
 - [ ] **Phase 3: Sites & Templates** - Site creation with Astro templates and GitHub Pages
 - [ ] **Phase 4: Content & Editor** - Content management with dual-mode editor
@@ -67,6 +68,20 @@ Plans:
 - [x] 01.2-01-PLAN.md — Backend security audit and architecture review (14 files)
 - [x] 01.2-02-PLAN.md — Frontend auth, dashboard, and routing review (25 files)
 - [x] 01.2-03-PLAN.md — Shared components, settings review, and consolidated report (14 files)
+
+### Phase 1.3: Review Fixes (INSERTED)
+**Goal**: Address important recommendations from Phase 1.2 code review before continuing
+**Depends on**: Phase 1.2
+**Requirements**: None (quality improvements based on code review findings)
+**Success Criteria** (what must be TRUE):
+  1. Rate limiting added to /resend-verification endpoint (3 requests/hour/user)
+  2. APP_SECRET validation requires minimum 32 characters
+  3. ErrorBoundary added at React app root
+  4. Header logo uses React Router Link instead of anchor tag
+**Plans**: 1 plan
+
+Plans:
+- [x] 01.3-01-PLAN.md — Implement code review recommendations (rate limiting, APP_SECRET validation, ErrorBoundary, Header fix)
 
 ### Phase 2: GitHub Integration
 **Goal**: Barae can operate on user's GitHub repositories via installed App
@@ -125,6 +140,7 @@ Phases execute in numeric order: 1 -> 1.1 -> 1.2 -> 2 -> 3 -> 4
 | 1. Foundation & Auth | 3/3 | Complete | 2026-02-03 |
 | 1.1 Code Refactoring | 1/1 | Complete | 2026-02-03 |
 | 1.2 Code Review | 3/3 | Complete | 2026-02-04 |
+| 1.3 Review Fixes | 1/1 | Complete | 2026-02-04 |
 | 2. GitHub Integration | 0/2 | Not started | - |
 | 3. Sites & Templates | 0/2 | Not started | - |
 | 4. Content & Editor | 0/3 | Not started | - |
