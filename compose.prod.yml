@@ -32,6 +32,8 @@ services:
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
       MIGRATE_ON_START: "true"
+      # SMTP config comes from .env file via env_file
+      # Required in .env for production: SMTP_HOST, SMTP_USER, SMTP_PASSWORD, EMAIL_FROM
     expose:
       - "3000"
     healthcheck:
