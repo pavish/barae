@@ -4,6 +4,7 @@ import { RootRedirect } from './RootRedirect'
 import { AuthPage } from '../features/auth/pages/AuthPage'
 import { ForgotPasswordPage } from '../features/auth/pages/ForgotPasswordPage'
 import { ResetPasswordPage } from '../features/auth/pages/ResetPasswordPage'
+import { VerifyEmailPage } from '../features/auth/pages/VerifyEmailPage'
 import { DashboardLayout } from '../features/dashboard/components'
 import { DashboardPage } from '../features/dashboard/pages/DashboardPage'
 import { SettingsPage } from '../features/settings/pages/SettingsPage'
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
   {
     path: '/auth/reset-password',
     element: <ResetPasswordPage />,
+  },
+  {
+    path: '/auth/verify-email',
+    element: <VerifyEmailPage />,
   },
   // Protected routes with DashboardLayout
   {

@@ -82,6 +82,72 @@ export function registerAuthRoutes(fastify: FastifyInstance, auth: AuthService) 
     }
   )
 
+  // Custom endpoint to verify email token
+  fastify.get(
+    '/api/v1/auth/verify-email',
+    async (request: FastifyRequest<{ Querystring: { token?: string } }>, reply: FastifyReply) => {
+      try {
+        const { token } = request.query
+        if (!token) {
+          return reply.status(400).send({ error: 'Token is required' })
+        }
+
+        // Look up the verification token
+        const verifications = await fastify.db.do
+          .select({
+            id: schema.verification.id,
+            identifier: schema.verification.identifier,
+            expiresAt: schema.verification.expiresAt,
+          })
+          .from(schema.verification)
+          .where(eq(schema.verification.value, token))
+          .limit(1)
+
+        if (verifications.length === 0) {
+          return reply.status(400).send({ error: 'Invalid or expired token' })
+        }
+
+        const verification = verifications[0]
+
+        // Check if token is expired
+        if (new Date() > verification.expiresAt) {
+          // Delete expired token
+          await fastify.db.do
+            .delete(schema.verification)
+            .where(eq(schema.verification.id, verification.id))
+          return reply.status(400).send({ error: 'Token has expired' })
+        }
+
+        // Find the user by email
+        const users = await fastify.db.do
+          .select({ id: schema.user.id })
+          .from(schema.user)
+          .where(eq(schema.user.email, verification.identifier))
+          .limit(1)
+
+        if (users.length === 0) {
+          return reply.status(404).send({ error: 'User not found' })
+        }
+
+        // Mark user as verified
+        await fastify.db.do
+          .update(schema.user)
+          .set({ emailVerified: true, updatedAt: new Date() })
+          .where(eq(schema.user.id, users[0].id))
+
+        // Delete the used verification token
+        await fastify.db.do
+          .delete(schema.verification)
+          .where(eq(schema.verification.id, verification.id))
+
+        return reply.send({ success: true, message: 'Email verified successfully' })
+      } catch (err) {
+        fastify.log.error({ err }, 'Failed to verify email')
+        return reply.status(500).send({ error: 'Failed to verify email' })
+      }
+    }
+  )
+
   // Register versioned auth routes (catch-all for better-auth)
   fastify.all('/api/v1/auth/*', handler)
 
