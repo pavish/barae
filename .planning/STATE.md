@@ -75,6 +75,16 @@ Recent decisions affecting current work:
 - Graceful fallback to console logging when SMTP_HOST not set
 - Config: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, SMTP_SECURE, EMAIL_FROM
 
+**From 01-03 (During Verification):**
+- Custom `/api/v1/auth/resend-verification` endpoint created
+  - better-auth disables `/send-verification-email` when `requireEmailVerification: false`
+  - Custom endpoint reads session cookie, extracts token, sends verification email
+- Cookie handling: better-auth uses signed cookies (`token.signature` format)
+  - Extract token by splitting on `.` before database lookup
+  - Database stores raw token, not hashed
+- Added @fastify/cookie for parsing cookies in custom endpoints
+- .env.example updated with Mailpit defaults for local dev
+
 ### Pending Todos
 
 - Set up GitHub OAuth App for login testing (callback URL: /api/v1/auth/callback/github)
@@ -83,7 +93,7 @@ Recent decisions affecting current work:
 
 ### Blockers/Concerns
 
-- None currently - test environment works with `docker compose -f compose.test.yml up --build`
+- None currently - email verification flow working with Mailpit
 
 ### Roadmap Evolution
 
@@ -92,5 +102,5 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-03
-Stopped at: Plan 01-03 human verification checkpoint (tasks 1-3 complete)
-Resume action: Verify dashboard at http://localhost:5173 and approve or report issues
+Stopped at: Plan 01-03 human verification checkpoint (tasks 1-3 complete, email fix applied)
+Resume action: Complete verification checklist at http://localhost:5173, check emails at http://localhost:8025
