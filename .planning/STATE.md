@@ -10,31 +10,31 @@ See: .planning/PROJECT.md (updated 2026-02-03)
 ## Current Position
 
 Phase: 1 of 4 (Foundation & Auth)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-02-03 - Completed 01-01-PLAN.md (Backend Auth + Frontend Scaffold)
+Last activity: 2026-02-03 - Completed 01-02-PLAN.md (Auth UI & Email Integration)
 
-Progress: [█░░░░░░░░░] 10%
+Progress: [██░░░░░░░░] 20%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: ~15min
-- Total execution time: ~15min
+- Total plans completed: 2
+- Average duration: ~13.5min
+- Total execution time: ~27min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1. Foundation & Auth | 1/3 | ~15min | ~15min |
+| 1. Foundation & Auth | 2/3 | ~27min | ~13.5min |
 | 2. GitHub Integration | 0/2 | - | - |
 | 3. Sites & Templates | 0/2 | - | - |
 | 4. Content & Editor | 0/3 | - | - |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (~15min)
-- Trend: Starting
+- Last 5 plans: 01-01 (~15min), 01-02 (~12min)
+- Trend: Consistent
 
 *Updated after each plan completion*
 
@@ -54,10 +54,17 @@ Recent decisions affecting current work:
 - drizzle-kit generate requires tsx wrapper due to ESM .js extension imports
 - Two user tables exist (scaffold's `users` and better-auth's `user`) - better-auth is source of truth
 
+**From 01-02:**
+- Two-column auth layout: form on left, GitHub OAuth on right (stacked on mobile)
+- Fire-and-forget email sending to prevent timing attacks
+- Graceful fallback to console logging when RESEND_API_KEY not set
+- Form validation: Zod schema + react-hook-form zodResolver pattern
+
 ### Pending Todos
 
 - Apply database migration after POSTGRES_* env vars configured
 - Set up GitHub OAuth App for login testing
+- Configure Resend for production email sending
 
 ### Blockers/Concerns
 
@@ -65,6 +72,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-02-03T15:30:00Z
-Stopped at: Completed 01-01-PLAN.md
-Resume file: .planning/phases/01-foundation-auth/01-02-PLAN.md (next)
+Last session: 2026-02-03T15:38:00Z
+Stopped at: Completed 01-02-PLAN.md
+Resume file: .planning/phases/01-foundation-auth/01-03-PLAN.md (next)
