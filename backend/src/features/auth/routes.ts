@@ -3,14 +3,30 @@ import type { AuthService } from './service.js'
 import { createAuthHandler } from './handler.js'
 import { eq } from 'drizzle-orm'
 import * as schema from '../../db/schema/index.js'
+import rateLimit from '@fastify/rate-limit'
 
 export function registerAuthRoutes(fastify: FastifyInstance, auth: AuthService) {
   const handler = createAuthHandler(auth)
 
-  // Custom endpoint for resending verification email (works when requireEmailVerification is false)
-  fastify.post(
-    '/api/v1/auth/resend-verification',
-    async (request: FastifyRequest, reply: FastifyReply) => {
+  // Custom endpoint for resending verification email with rate limiting
+  // Wrapped in scoped plugin so rate limit only applies to this route
+  fastify.register(async (scope) => {
+    await scope.register(rateLimit, {
+      max: 3,
+      timeWindow: '1 hour',
+      keyGenerator: (request: FastifyRequest) => {
+        // Use session cookie token if available, fall back to IP
+        const sessionCookie = request.cookies?.['better-auth.session_token']
+        return sessionCookie?.split('.')[0] || request.ip
+      },
+      errorResponseBuilder: () => ({
+        statusCode: 429,
+        error: 'Too Many Requests',
+        message: 'Too many verification emails requested. Please try again later.',
+      }),
+    })
+
+    scope.post('/api/v1/auth/resend-verification', async (request: FastifyRequest, reply: FastifyReply) => {
       try {
         // Get session from cookie using better-auth
         const sessionCookie = request.cookies['better-auth.session_token']
@@ -68,8 +84,8 @@ export function registerAuthRoutes(fastify: FastifyInstance, auth: AuthService) 
         fastify.log.error({ err }, 'Failed to resend verification email')
         return reply.status(500).send({ error: 'Failed to send verification email' })
       }
-    }
-  )
+    })
+  })
 
   // Register versioned auth routes (catch-all for better-auth)
   // Note: better-auth handles /verify-email via this catch-all
