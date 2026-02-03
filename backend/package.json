@@ -9,6 +9,10 @@
     "build": "tsc -p tsconfig.build.json && cp -r migrations dist/migrations",
     "dev": "tsx watch ./src/index.ts",
     "test": "tsx --test --experimental-test-coverage ./tests/**/*.test.ts",
+    "db:generate": "tsx node_modules/drizzle-kit/bin.cjs generate",
+    "db:migrate": "tsx node_modules/drizzle-kit/bin.cjs migrate",
+    "db:push": "tsx node_modules/drizzle-kit/bin.cjs push",
+    "db:studio": "tsx node_modules/drizzle-kit/bin.cjs studio",
     "check:lint": "eslint .",
     "fix:lint": "eslint . --fix",
     "check:format": "prettier . --check",
@@ -38,6 +42,7 @@
   },
   "homepage": "https://github.com/pavish/barae#readme",
   "dependencies": {
+    "drizzle-kit": "^0.31.8",
     "@fastify/autoload": "^6.3.1",
     "@fastify/cors": "^11.2.0",
     "@fastify/env": "^5.0.3",
@@ -55,7 +60,6 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@types/node": "^25.0.8",
-    "drizzle-kit": "^0.31.8",
     "drizzle-seed": "^0.3.1",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
