@@ -2,13 +2,21 @@
 
 ## What This Is
 
-Barae is a git-backed blogging and portfolio platform with a hosted CMS experience. Users create and manage content through Barae's dashboard — writing in a dual-mode editor (raw markdown or visual), customizing themes, managing SEO — and everything lives in their own GitHub repository. Sites are built via GitHub Actions and hosted on GitHub Pages. Users own standard Astro projects they can edit with or without Barae.
+Barae is a git-backed blogging and portfolio platform. Users create and manage content through Barae's dashboard — writing in a dual-mode editor (raw markdown or visual), customizing themes, managing SEO — and everything lives in their own GitHub repository. Sites are built via GitHub Actions and hosted on GitHub Pages. Users own standard Astro projects they can edit with or without Barae.
 
-The platform is for developers, creators, and small businesses who want a polished blog or portfolio without vendor lock-in. Git knowledge isn't required, but power users can extend their sites directly.
+Barae can be used as a hosted service or self-hosted on your own infrastructure.
+
+The platform is for:
+- Developers, creators, and small businesses who want a blog, portfolio, or product site without the maintenance overhead and vendor lock-in.
+- People helping their non-technical family members and friends build blogs or portfolios, and let them take over.
+
+Git knowledge isn't required, but power users can extend their sites directly.
 
 ## Core Value
 
-**Users own their content in git** — standard Astro projects, portable, not locked into Barae. The repo works with or without Barae, but people prefer Barae for its ease of use and great UX.
+**Built for long-term maintenance, not just initial site creation.** Users own their content in git — standard Astro projects, portable, not locked into Barae. The repo works with or without Barae.
+
+**LLM-ready with guardrails.** AI instructions are included in templates so users can extend their sites with tools like Claude or Cursor. Strict repo structure and verification scripts before commits and in CI/CD make it easier for AI agents to verify their work, preventing them from breaking stuff.
 
 ## Requirements
 

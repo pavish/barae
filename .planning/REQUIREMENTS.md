@@ -1,7 +1,7 @@
 # Requirements: Barae
 
 **Defined:** 2026-02-03
-**Core Value:** Users own their content in git — standard Astro projects, portable, not locked into Barae.
+**Core Value:** Built for long-term maintenance, not just initial site creation. Users own their content in git — standard Astro projects, portable, not locked into Barae. LLM-ready with strict repo structure and verification scripts so AI tools can help without breaking stuff.
 
 ## Milestone 1: Core MVP
 

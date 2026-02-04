@@ -115,7 +115,7 @@ Features to explicitly NOT build. Common mistakes in this domain.
 | **Unlimited Content Types** | Feature bloat - "8/10 people delete apps they can't figure out" | Two templates, focused collections: posts, projects, pages. Expand carefully. |
 | **Complex Permissions** | Enterprise feature, adds UI complexity, confuses individuals/small teams | Simple owner/editor model initially. Role complexity later if needed. |
 | **Inline Code Editor** | Users who want to edit code will use VS Code/GitHub | Link to repo. Don't recreate IDE. |
-| **Social Media Publishing** | Scope creep, API maintenance burden, not core value | Users post links manually. Integration ecosystem exists. |
+| **Social Media Publishing** | ~~Scope creep~~ | **Now in scope** - auto-posting to connected platforms reduces maintenance burden for users who find this tedious. |
 | **Email Newsletter** | Different domain entirely, mature solutions exist | Recommend Buttondown, ConvertKit integration instead. |
 | **Comments System (Built-in)** | Spam management, moderation complexity | Giscus (GitHub Discussions) or Disqus. External service. |
 | **Complex Editorial Workflows** | Decap users turned it off "after 15 minutes" | Simple draft/published. Avoid approval chains, multiple review states. |
@@ -214,7 +214,7 @@ Templates (Independent Track)
 | Git providers | GitHub | GitHub | GH/GL/BB | GitHub | GitHub |
 | Media management | Good | Basic | Good | **Excellent** | Good |
 | i18n | Limited | Limited | Yes | **Excellent** | Later |
-| Self-hostable | Yes | Yes | No | Yes | No (hosted) |
+| Self-hostable | Yes | Yes | No | Yes | **Yes** |
 | Pricing | Free-$299 | Free | $55-350+ | Free | TBD |
 | Non-dev friendly | Medium | Low | High | Medium | **High** |
 | Template quality | Varies | Varies | Good | N/A | **Curated** |

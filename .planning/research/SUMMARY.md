@@ -7,7 +7,9 @@
 
 ## Executive Summary
 
-Barae is a git-backed blogging platform where users own standard Astro projects in their GitHub repositories. The platform bridges the gap between developer-first tools (TinaCMS, Decap CMS) and content creator needs through a dual-mode editor that genuinely serves both audiences. Users get a hosted web dashboard for content editing while maintaining full portability - their content lives in standard Astro projects they own, not in Barae's database.
+Barae is a git-backed blogging platform where users own standard Astro projects in their GitHub repositories. The platform bridges the gap between developer-first tools (TinaCMS, Decap CMS) and content creator needs through a dual-mode editor that genuinely serves both audiences. Users get a web dashboard for content editing (hosted or self-hosted) while maintaining full portability - their content lives in standard Astro projects they own, not in Barae's database.
+
+Barae is purpose-built for long-term maintenance, not just initial site creation. It targets developers who find website maintenance tedious, and people helping non-technical family and friends build sites they can take over. LLM instructions are included in templates so users can extend sites with AI tools. Strict repo structure and verification scripts before commits and in CI/CD make it easier for AI agents to verify their work.
 
 The recommended architecture separates four major concerns: (1) authentication via better-auth with native Drizzle support, (2) content editing through a React/Vite dashboard with MDXEditor for dual-mode Markdown/WYSIWYG, (3) git operations via GitHub App and Octokit, and (4) builds/hosting via GitHub Actions and GitHub Pages. The stack prioritizes mature, actively-maintained libraries that integrate cleanly with Barae's existing Fastify/Drizzle/PostgreSQL backend.
 
@@ -68,7 +70,7 @@ Git-backed CMS platforms have established clear baseline expectations. Users exp
 - Plugin marketplace (Decap shows this leads to fragmentation and maintenance hell)
 - Complex editorial workflows (users turned off Decap's approval chains "after 15 minutes")
 - Built-in comments system (use Giscus/GitHub Discussions instead)
-- Social media publishing (scope creep, not core value)
+- ~~Social media publishing~~ **Now in scope** - auto-posting to connected platforms
 
 ### Architecture Approach
 
