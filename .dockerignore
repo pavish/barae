@@ -1,0 +1,13 @@
+.git
+.gitignore
+.planning
+.claude
+.agents
+.env
+node_modules
+**/node_modules
+**/dist
+**/.git
+**/npm-debug.log
+README.md
+LICENSE

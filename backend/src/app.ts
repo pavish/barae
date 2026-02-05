@@ -1,43 +1,44 @@
-import fastify, { FastifyInstance } from 'fastify'
-import cors from '@fastify/cors'
-import cookie from '@fastify/cookie'
+import process from 'node:process'
+import fastify, { type FastifyInstance } from 'fastify'
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { sql } from 'drizzle-orm'
-import config from './config.js'
+import configPlugin from './plugins/config.js'
 import db from './db/index.js'
-import email from './lib/email/index.js'
-import auth from './features/auth/index.js'
+import authPlugin from './auth/index.js'
+import authRoutes from './auth/routes.js'
 
 export async function buildApp(): Promise<FastifyInstance> {
+  // Logger config needs NODE_ENV at instantiation time, before any plugins run.
+  // This is the single acceptable use of process.env outside the config plugin.
+  const nodeEnv = process.env.NODE_ENV ?? 'development'
+
   const app = fastify({
-    logger: true,
+    logger: {
+      level: nodeEnv === 'production' ? 'info' : 'debug',
+      ...(nodeEnv !== 'production' && {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            translateTime: 'HH:MM:ss Z',
+            ignore: 'pid,hostname',
+          },
+        },
+      }),
+    },
   }).withTypeProvider<TypeBoxTypeProvider>()
 
-  // Register core plugins
-  await app.register(config)
+  // Registration order matters: config -> db -> auth -> auth-routes
+  await app.register(configPlugin)
   await app.register(db)
-  await app.register(cookie)
-
-  // Register CORS after config is available
-  await app.register(cors, {
-    origin: app.config.FRONTEND_URL || 'http://localhost:5173',
-    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true, // Allow cookies for auth
-  })
-
-  // Register services
-  await app.register(email)
-
-  // Register features
-  await app.register(auth)
+  await app.register(authPlugin)
+  await app.register(authRoutes)
 
   // Health check endpoint
-  app.get('/health', async (request, reply) => {
+  app.get('/health', async (_request, reply) => {
     try {
-      // Check database connectivity
       await app.db.do.execute(sql`SELECT 1`)
       return { status: 'ok', timestamp: new Date().toISOString() }
-    } catch (err) {
+    } catch (_err) {
       reply.status(503)
       return { status: 'error', message: 'Database connection failed' }
     }

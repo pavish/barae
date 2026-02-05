@@ -1,28 +1,26 @@
-import { FastifyInstance } from 'fastify'
 import fp from 'fastify-plugin'
-import { drizzle } from 'drizzle-orm/postgres-js'
-import postgres from 'postgres'
-import * as dbSchema from './schema/index.js'
+import { createDbClient, schema as dbSchema } from './client.js'
 
-function createDbHandler(fastify: FastifyInstance) {
-  const client = postgres({
-    host: fastify.config.POSTGRES_HOST,
-    port: fastify.config.POSTGRES_PORT,
-    database: fastify.config.POSTGRES_DB,
-    username: fastify.config.POSTGRES_USER,
-    password: fastify.config.POSTGRES_PASSWORD,
-  })
+type DbClient = ReturnType<typeof createDbClient>
 
-  return {
-    client,
-    schema: dbSchema,
-    do: drizzle(client, { schema: dbSchema }),
-  }
+interface DbHandler {
+  client: DbClient['client']
+  schema: typeof dbSchema
+  do: DbClient['db']
 }
 
 export default fp(
   async (fastify) => {
-    fastify.decorate('db', createDbHandler(fastify))
+    const { client, db } = createDbClient({
+      host: fastify.config.POSTGRES_HOST,
+      port: fastify.config.POSTGRES_PORT,
+      database: fastify.config.POSTGRES_DB,
+      username: fastify.config.POSTGRES_USER,
+      password: fastify.config.POSTGRES_PASSWORD,
+    })
+
+    const dbHandler: DbHandler = { client, schema: dbSchema, do: db }
+    fastify.decorate('db', dbHandler)
 
     fastify.addHook('onClose', async (instance) => {
       instance.log.info('Closing database connection')
@@ -35,6 +33,6 @@ export default fp(
 
 declare module 'fastify' {
   interface FastifyInstance {
-    db: ReturnType<typeof createDbHandler>
+    db: DbHandler
   }
 }

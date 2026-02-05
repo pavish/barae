@@ -8,6 +8,10 @@ dist/
 # Frontend
 .vite
 
+# Docker / Caddy
+caddy/data/
+caddy/config/
+
 # Logs
 logs
 *.log
@@ -24,7 +28,8 @@ npm-debug.log*
 *.sln
 *.sw?
 
-# Claude
+# Claude + agents
 
 .claude
 .planning/debug
+.agents

@@ -2,7 +2,7 @@
 
 ## What This Is
 
-Barae is a git-backed blogging and portfolio platform. Users create and manage content through Barae's dashboard — writing in a dual-mode editor (raw markdown or visual), customizing themes, managing SEO — and everything lives in their own GitHub repository. Sites are built via GitHub Actions and hosted on GitHub Pages. Users own standard Astro projects they can edit with or without Barae.
+Barae is a git-backed blogging and portfolio platform. Users create and manage content through Barae's dashboard — writing in a dual-mode editor (raw markdown or visual), customizing themes, managing SEO, managing social media posts — and everything lives in their own GitHub repository. Sites are built via GitHub Actions and hosted on GitHub Pages. Users own standard Astro projects they can edit with or without Barae.
 
 Barae can be used as a hosted service or self-hosted on your own infrastructure.
 
@@ -28,72 +28,42 @@ Git knowledge isn't required, but power users can extend their sites directly.
 - ✓ Environment configuration with validation — existing
 - ✓ Docker containerization support — existing
 
-### Active
+### Active — Milestone 1: Foundation & Integration
 
 **Authentication**
 - [ ] User can sign up with email/password
-- [ ] User can log in with GitHub OAuth
+- [ ] User can log in via GitHub App OAuth (single GitHub App for both auth and repo access)
 - [ ] User session persists across browser sessions
 - [ ] User can reset password via email
 
-**GitHub Integration**
-- [ ] User installs Barae GitHub App for repo access
-- [ ] User can create new repos from Barae templates
-- [ ] Barae configures GitHub Actions for Astro builds
-- [ ] Barae configures GitHub Pages deployment
+**GitHub App Integration**
+- [ ] User installs Barae GitHub App (handles both OAuth login and repo access)
+- [ ] User can add/manage GitHub accounts linked to their Barae account
+- [ ] User can view GitHub App installations and their status
+- [ ] Domain models for GitHub accounts and installations are designed and implemented
 
-**Sites & Templates**
-- [ ] User can create unlimited sites
-- [ ] User chooses from curated templates (Personal Dev Site, Product Site)
-- [ ] Each site is a standard Astro project in user's GitHub repo
+**Production Setup & Docker**
+- [ ] Docker Compose configs are production-ready (dev, test, prod)
+- [ ] Backend Dockerfile includes proper entrypoint and migration handling
+- [ ] Environment configuration is complete and documented
 
-**Content Management**
-- [ ] User can create blog posts with title, date, tags, content
-- [ ] User can create static pages (about, contact, etc.)
-- [ ] User can create portfolio/project items
-- [ ] User can save content as draft or published
-- [ ] User can filter content by title, tags, date
-- [ ] User can manage tags (create, edit, delete)
+**Testing Infrastructure**
+- [ ] Backend API tests (route/handler testing)
+- [ ] Frontend component tests
+- [ ] E2E tests
+- [ ] CI pipeline runs all tests on commits (feedback loop)
 
-**Editor**
-- [ ] User can write in raw markdown mode
-- [ ] User can edit visually on rendered preview (click-to-edit)
-- [ ] User can toggle between modes
-- [ ] Split-view shows live preview alongside editor
-- [ ] Editor supports MDX (React components in markdown)
-- [ ] Editor supports Barae components (code blocks, callouts, embeds)
-- [ ] Editor works well on mobile
+**Codebase Standards**
+- [ ] `.planning/codebase/` contains user-approved patterns and structure docs
+- [ ] Standards are captured from user conversations throughout development
 
-**Themes & Customization**
-- [ ] User can select from curated themes
-- [ ] User can customize visual settings (colors, fonts, logo)
-- [ ] User can inject custom CSS
-- [ ] Changes reflect in live preview
+**Frontend (basic)**
+- [ ] Basic dashboard with auth flow (login, signup, password reset)
+- [ ] GitHub account/installation management UI (enough to test the integration)
 
-**SEO**
-- [ ] User can set meta title/description per page
-- [ ] Templates generate OG images automatically
-- [ ] Templates include Twitter card meta tags
-- [ ] Templates generate JSON-LD structured data
-- [ ] Templates generate sitemap.xml
-- [ ] Templates generate robots.txt
+### Deferred — Future Milestones
 
-**Images**
-- [ ] User can upload images in editor
-- [ ] Images are compressed before commit
-- [ ] Images stored in git repo (public/ directory)
-
-**Social & Feeds**
-- [ ] Sites have automatic RSS feed
-- [ ] User can configure social share buttons (which platforms to show)
-
-**Hosting**
-- [ ] GitHub Pages deployment works out of the box
-- [ ] In-app documentation guides custom domain setup
-
-**Frontend Dashboard**
-- [ ] React + Vite dashboard for all user interactions
-- [ ] Dashboard is responsive and mobile-friendly
+Sites & templates, content management, editor, themes, SEO, images, social/feeds, hosting configuration — all deferred until foundation is solid.
 
 ### Out of Scope
 
@@ -110,33 +80,33 @@ Git knowledge isn't required, but power users can extend their sites directly.
 
 ## Context
 
-**Existing codebase:**
-- Backend scaffold with Fastify 5.7, TypeScript 5.9, Drizzle ORM
-- PostgreSQL 18 database, Docker Compose for local dev
-- Users table exists but no auth implementation yet
+**Existing codebase (skeleton only):**
+- Backend: Fastify 5.7, TypeScript 5.9, Drizzle ORM — entry point, config plugin, db plugin, health check
+- Frontend: React 19, Vite 7, Tailwind CSS 4 — entry point only, no components or routes
+- PostgreSQL 17 database, Docker Compose for local dev (dev, test, prod configs)
+- No schemas, no features, no migrations — clean slate for implementation
 - Plugin architecture ready for feature modules
-- No frontend yet — needs to be built
 
 **Technical approach:**
 - **Library-first**: Use stable, maintained open-source libraries instead of custom implementations
-- **better-auth** for authentication (email/password, GitHub OAuth, sessions, Drizzle adapter)
-- **GitHub App** for repo creation, Actions configuration, Pages deployment
+- **better-auth** for authentication (email/password, sessions, Drizzle adapter)
+- **Single GitHub App** handles both OAuth login and repo access — no separate OAuth App
 - **React + Vite** for the dashboard frontend
 - **Dual-mode editor**: raw markdown + visual editing (library TBD via research)
 - **Astro templates** maintained by Barae, forked to user repos
 - **Git-native design**: repos are standard Astro projects, no Barae lock-in
 
-**Content model (in user's repo):**
-- Blog posts: MDX files in `src/content/blog/`
-- Static pages: MDX in `src/content/pages/`
-- Portfolio items: MDX in `src/content/portfolio/`
-- Site config: YAML/JSON in repo (standard Astro config)
-- Images: stored in `public/images/`
-- Custom CSS: stored in designated location
-
 **Templates:**
 1. **Personal Dev Site**: Portfolio showcase, blog, about page
 2. **Product Site**: Landing page, features, about, blog
+
+## Development Standards
+
+**Quality enforcement:**
+- Always verify code against the codebase standards defined in `.planning/codebase/`, and project patterns
+- Every code and pattern commit must be reviewed and approved by the user before proceeding
+- Never assume implementation details early — ask the user for specifics when building anything new (feature design, data models, UI flows, API contracts)
+- When in doubt about approach, present options and wait for direction rather than picking one
 
 ## Constraints
 
@@ -153,7 +123,7 @@ Git knowledge isn't required, but power users can extend their sites directly.
 |----------|-----------|---------|
 | **Prefer stable open-source libraries** | Don't reinvent the wheel — use battle-tested libraries that scale | ✓ Adopted |
 | better-auth for authentication | Full-featured auth library with Drizzle adapter, email/password, OAuth, sessions out of the box | ✓ Adopted |
-| GitHub App for repo access | Granular permissions, no token management, can create repos and configure Actions | ✓ Adopted |
+| Single GitHub App for auth + repo access | One app handles OAuth login and repo access — no separate OAuth App needed | ✓ Adopted |
 | GitHub Actions for builds | Users don't need Barae running to build — eliminates server-side build infrastructure | ✓ Adopted |
 | GitHub Pages for hosting | Free, integrated with GitHub, sufficient for blogs | ✓ Adopted |
 | Git for image storage | Simple, portable, user owns everything — accept repo size tradeoff | ✓ Adopted |
@@ -163,4 +133,4 @@ Git knowledge isn't required, but power users can extend their sites directly.
 | React + Vite for dashboard | Simple, fast, widely known | ✓ Adopted |
 
 ---
-*Last updated: 2026-02-03 after comprehensive questioning*
+*Last updated: 2026-02-05 after milestone 1 scoping*

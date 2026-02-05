@@ -1,0 +1,13 @@
+{
+	auto_https off
+}
+
+:8100 {
+	# API routes: strip /api/ prefix, proxy to backend
+	handle_path /api/* {
+		reverse_proxy backend:3000
+	}
+
+	# Everything else: proxy to Vite dev server
+	reverse_proxy frontend:5173
+}
