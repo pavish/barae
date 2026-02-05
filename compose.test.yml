@@ -1,5 +1,4 @@
 # Testing - docker compose -f compose.test.yml up --build --abort-on-container-exit
-# Ephemeral database, runs migrations, designed for CI/testing
 
 services:
   db:
@@ -20,9 +19,6 @@ services:
   mailpit:
     container_name: barae-test-mailpit
     image: axllent/mailpit:latest
-    ports:
-      - "8025:8025"  # Web UI
-      - "1025:1025"  # SMTP
     environment:
       MP_SMTP_AUTH_ACCEPT_ANY: 1
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
@@ -30,7 +26,8 @@ services:
   backend:
     container_name: barae-test-backend
     build:
-      context: ./backend
+      context: .
+      dockerfile: Dockerfile.backend
       target: prod
     depends_on:
       db:
@@ -46,17 +43,15 @@ services:
       SERVER_HOST: 0.0.0.0
       SERVER_PORT: 3000
       APP_SECRET: test-secret-for-ci-at-least-32-characters-long
-      FRONTEND_URL: http://localhost:5173
-      MIGRATE_ON_START: "true"
-      # SMTP - Mailpit for local testing
       SMTP_HOST: mailpit
       SMTP_PORT: 1025
       SMTP_SECURE: "false"
       EMAIL_FROM: "Barae <noreply@barae.local>"
+      AUTH_BASE_URL: http://localhost:3000/api/v1
     ports:
       - "3000:3000"
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/health"]
       interval: 5s
       timeout: 3s
       retries: 30

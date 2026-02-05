@@ -2,42 +2,38 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-03)
+See: .planning/PROJECT.md (updated 2026-02-05)
 
-**Core value:** Users own their content in git — standard Astro projects, portable, not locked into Barae.
-**Current focus:** Phase 2 GitHub Integration - Connect users' GitHub accounts for repository access
+**Core value:** Built for long-term maintenance, not just initial site creation. Users own their content in git -- standard Astro projects, portable, not locked into Barae.
+**Current focus:** Phase 2.1 complete. Next: Phase 3 (Dashboard Shell & Auth Frontend).
 
 ## Current Position
 
-Phase: 1.3 of 4 (Review Fixes) - COMPLETE
-Plan: 01 of 1 (Code Review Recommendations) - COMPLETE
-Status: Phase 1.3 complete, ready for Phase 2
-Last activity: 2026-02-04 - Completed 01.3-01 (Code Review Fixes)
+Phase: 2.1 of 6 (Review & Standards Update)
+Plan: 4 of 4 in current phase
+Status: Phase complete
+Last activity: 2026-02-06 -- Completed 02.1-04-PLAN.md
 
-Progress: [████████░░] 80%
+Progress: [██████░░░░] ~55%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
-- Average duration: ~13min
-- Total execution time: ~103min
+- Total plans completed: 10
+- Average duration: ~6min
+- Total execution time: ~55min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1. Foundation & Auth | 4/4 | ~87min | ~22min |
-| 1.1 Code Refactoring | 1/1 | ~15min | ~15min |
-| 1.2 Code Review | 3/3 | ~13min | ~4min |
-| 1.3 Review Fixes | 1/1 | ~3min | ~3min |
-| 2. GitHub Integration | 0/2 | - | - |
-| 3. Sites & Templates | 0/2 | - | - |
-| 4. Content & Editor | 0/3 | - | - |
+| 1 | 4/4 | ~16min | ~4min |
+| 2 | 2/2 | ~14min | ~7min |
+| 2.1 | 4/4 | ~25min | ~6min |
 
 **Recent Trend:**
-- Last 5 plans: 01.1-01 (~15min), 01.2-01 (~2min), 01.2-02 (~3min), 01.2-03 (~8min), 01.3-01 (~3min)
-- Trend: Implementation fixes execute quickly when well-planned
+- Last 5 plans: 02.1-02 (~2min), 02.1-01 (~5min), 02.1-03 (~5min), 02.1-04 (~13min)
+- Trend: stable (02.1-04 longer due to checkpoint + user-requested fixes)
 
 *Updated after each plan completion*
 
@@ -48,108 +44,74 @@ Progress: [████████░░] 80%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- better-auth for authentication (Drizzle adapter, email/password + GitHub OAuth)
-- GitHub App for repo access (granular permissions, automatic token refresh)
-- MDXEditor for dual-mode editing (despite 851KB bundle, best option)
+- [Roadmap]: Single GitHub App for both OAuth login and repo access (no separate OAuth App)
+- [Roadmap]: better-auth for all authentication (email/password, OTP, sessions, GitHub OAuth)
+- [Roadmap]: Caddy reverse proxy for both dev and prod (port 8100 in dev)
+- [Roadmap]: Testing deferred to Phase 6 after all features are built
+- [01-01]: ~~Config is a standalone module, not a Fastify plugin -- imported directly~~ (superseded by 02.1-03)
+- [02.1-03]: Config via @fastify/env plugin -- accessed as fastify.config after plugin registration
+- [01-01]: Migration script reads process.env directly (only exception to config-only rule)
+- [01-01]: CORS removed -- Caddy handles all proxying
+- [01-01]: TypeScript very strict mode: noUncheckedIndexedAccess + exactOptionalPropertyTypes
+- [01-02]: Vite proxy removed -- Caddy handles all /api routing
+- [01-02]: apiFetch wrapper uses relative /api path, no env variables
+- [01-02]: shadcn/ui defaults: new-york style, neutral base color, CSS variables
+- [01-02]: TanStack Query defaults: 5min staleTime, 1 retry
+- [01-03]: Dockerfiles at project root with backend/ and frontend/ prefixed COPY paths (root build context)
+- [01-03]: Caddy handle_path strips /api/ prefix so Fastify sees clean /v1/ routes
+- [01-03]: Prod proxy image includes frontend build -- no separate frontend container in production
+- [01-03]: DOMAIN env var controls Caddy prod site address (defaults to localhost)
+- [01-03]: Removed VITE_API_URL, FRONTEND_URL, HTTP_PORT, premature GitHub vars from .env.example
+- [02-01]: ~~Standalone db client in db/client.ts shared by Fastify plugin and better-auth (no duplicate connections)~~ (superseded by 02.1-03)
+- [02.1-03]: db/client.ts is a factory function; client created inside Fastify db plugin using fastify.config
+- [02-01]: drizzle.config.ts uses schema array instead of barrel index.ts (CJS .js import resolution conflict)
+- [02-01]: AUTH_BASE_URL is required env var set via compose environment overrides (dev/test) and .env (prod)
+- [02-02]: better-auth baseURL must include full public path (/api/auth) -- basePath is ignored when URL already has pathname
+- [02-02]: Fastify auth route handler prepends /api to request URL to reconstruct Caddy-stripped prefix
+- [02-02]: sendVerificationOnSignUp: true auto-sends OTP on registration
+- [02-02]: trustedOrigins uses origin only (scheme+host), not full URL with path
+- [02-02]: Frontend auth client uses relative /api baseURL with no env variables
+- [02.1-02]: Keep @sinclair/typebox -- needed for @fastify/env schema definitions in Plan 03
+- [02.1-02]: @fastify/cookie safely removed -- better-auth has no fastify peer deps, handles cookies via Web API
+- [02.1-01]: Standards docs describe TARGET state (post-refactor) to guide code fixes in Plans 02 and 03
+- [02.1-01]: Frontend scaffolded deps kept intentionally for Phase 3
+- [02.1-01]: Review-after-phase documented as project convention (user preference), not workflow enforcement
+- [02.1-01]: CLAUDE.md is a concise pointer (37 lines) to .planning/codebase/, not a full standards doc
+- [02.1-03]: process.env.NODE_ENV read directly in app.ts for logger bootstrap (single documented exception)
+- [02.1-03]: Plugin dependency chain enforced: config -> db -> auth -> auth-routes
+- [02.1-03]: Email errors caught and logged (replaced void sendEmail fire-and-forget)
+- [02.1-03]: close-with-grace replaces manual process.on signal handlers for graceful shutdown
 
-**From 01-01:**
-- better-auth uses separate postgres client to avoid Fastify plugin dependency
-- drizzle-kit generate requires tsx wrapper due to ESM .js extension imports
-- Two user tables exist (scaffold's `users` and better-auth's `user`) - better-auth is source of truth
-
-**From 01-02:**
-- Two-column auth layout: form on left, GitHub OAuth on right (stacked on mobile)
-- Fire-and-forget email sending to prevent timing attacks
-- Form validation: Zod schema + react-hook-form zodResolver pattern
-
-**From 01.1 (Backend Refactoring):**
-- Single DB connection: auth uses `fastify.db.do` via factory pattern (was duplicate connection)
-- Versioned routes: all auth endpoints now at `/api/v1/auth/*`
-- Config access: all via `fastify.config.*` (no direct process.env in src/)
-- Plugin patterns: scoped type declarations in each plugin file
-- Email service: Fastify plugin with proper dependency chain
-- Feature modules: routes, service, handler, contracts pattern
-- Health check: `/health` endpoint with DB connectivity test
-- Docker: compose.test.yml for ephemeral testing, auto-migrations via entrypoint
-
-**Email (Post-Refactoring):**
-- SMTP via Nodemailer replaces Resend API (standard protocol, no vendor lock-in)
-- Mailpit for local dev email testing (UI at http://localhost:8025)
-- Graceful fallback to console logging when SMTP_HOST not set
-- Config: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, SMTP_SECURE, EMAIL_FROM
-
-**From 01-03:**
-- Custom `/api/v1/auth/resend-verification` endpoint created
-  - better-auth disables `/send-verification-email` when `requireEmailVerification: false`
-  - Custom endpoint reads session cookie, extracts token, sends verification email
-- Cookie handling: better-auth uses signed cookies (`token.signature` format)
-  - Extract token by splitting on `.` before database lookup
-  - Database stores raw token, not hashed
-- Added @fastify/cookie for parsing cookies in custom endpoints
-- Adaptive navigation: sidebar on desktop (md+), bottom nav on mobile
-- Theme persistence: localStorage with system option respecting OS preference
-
-**From 01-04 (Gap Closure):**
-- better-auth emailVerification.sendOnSignUp: true for auto-send on signup
-- baseURL set to FRONTEND_URL for correct email links (password reset, verification)
-- Removed custom verify-email endpoint - better-auth handles via catch-all with JWT tokens
-- resend-verification uses auth.api.sendVerificationEmail for JWT token generation
-- Frontend VerifyEmailPage uses authClient.$fetch instead of direct fetch
-
-**From 01.2-01 (Backend Review):**
-- No critical security issues found - better-auth provides secure defaults
-- Two immediate recommendations identified:
-  1. Add rate limiting to `/resend-verification` endpoint (email abuse prevention)
-  2. Add `minLength: 32` to APP_SECRET validation (stronger secret enforcement)
-- Architecture fully compliant with established patterns in backend-patterns.md
-- Future tech debt: Add indexes on session.userId and account.userId
-
-**From 01.2-02 (Frontend Review):**
-- No critical security issues found in frontend auth code
-- 2 medium accessibility issues (ARIA roles for auth tabs) - recommended not blocking
-- 11 low issues documented including:
-  - ErrorBoundary missing at app root
-  - Header logo uses `<a>` instead of React Router `<Link>`
-  - Icon components duplicated between Sidebar and MobileNav
-- Security checklist verified: no hardcoded creds, no localStorage secrets, route protection works
-- Form validation pattern (Zod + react-hook-form) verified as correct
-- better-auth client SDK integration verified as secure
-
-**From 01.2-03 (Shared/Settings Review + Final Report):**
-- 14 shared/settings files reviewed: no critical or important issues
-- 6 low accessibility improvements identified (aria-labels, focus traps)
-- better-auth integration verified as architecturally sound:
-  - APP_SECRET properly centralized (config.ts -> service.ts -> better-auth)
-  - No custom crypto anywhere - all signing delegated to better-auth
-  - resend-verification endpoint correctly uses auth.api.sendVerificationEmail()
-- Consolidated report: 53 files, 0 critical, 2 important, 19 low issues
-- Phase 2 recommendations: rate limiting + APP_SECRET minLength validation
-
-**From 01.3-01 (Review Fixes):**
-- Rate limiting on resend-verification: 3 requests per hour via @fastify/rate-limit
-- Scoped plugin pattern: rate limiting isolated to single endpoint via fastify.register scope
-- APP_SECRET validation: minLength: 32 enforced at config load time
-- ErrorBoundary: class component with styled fallback wraps entire React app
-- SPA navigation: Header logo uses React Router Link instead of anchor tag
+**Phase 2.1 consolidated decisions** (summary of changes across plans 01-04):
+- [02.1]: Config via @fastify/env plugin, replacing standalone config.ts module
+- [02.1]: All initialization happens inside Fastify plugin lifecycle (db, auth, email) -- no module-level singletons
+- [02.1]: close-with-grace for graceful shutdown (replaces manual signal handlers)
+- [02.1]: Email errors logged, not silently swallowed (no void fire-and-forget)
+- [02.1]: process.env.NODE_ENV read directly for logger bootstrap (single exception beyond config plugin)
+- [02.1]: Migration naming convention enforced: NNNN_descriptive_name
+- [02.1]: eslint-plugin-prettier removed, only eslint-config-prettier used
+- [02.1-04]: Routes co-located within feature modules (src/auth/routes.ts, not src/routes/)
+- [02.1-04]: CLAUDE.md simplified -- defers all rules to STANDARDS.md, no duplication
+- [02.1-04]: Docker health checks use 127.0.0.1 (Alpine resolves localhost to IPv6 ::1)
+- [02.1-04]: API versioning enforced: /v1/auth/*, AUTH_BASE_URL includes /api/v1
+- [02.1-04]: Frontend auth client baseURL: /api/v1 (was /api)
 
 ### Pending Todos
 
-- Set up GitHub OAuth App for login testing (callback URL: /api/v1/auth/callback/github)
-- Configure production SMTP for email sending
-- Consider remaining accessibility improvements from 01.2-02 (ARIA roles, icon deduplication)
-
-### Blockers/Concerns
-
-- None blocking. All "important" code review recommendations addressed in Phase 1.3.
+- [01-04]: Proxy container did not auto-start in dev compose — investigate depends_on timing or add restart policy
+- [01-04]: compose.test.yml needs proxy + frontend services for Cypress E2E tests (Phase 6)
 
 ### Roadmap Evolution
 
-- Phase 1.1 inserted after Phase 1: Code Refactoring (URGENT) - User requested quality improvements before continuing
-- Phase 1.2 inserted after Phase 1.1: Code Review - Thorough review of implemented code for quality and issues
-- Phase 1.3 inserted after Phase 1.2: Review Fixes (URGENT) - Address 2 important + 2 low recommendations before Phase 2
+- Phase 2.1 inserted after Phase 2: Full review of Phase 1 & 2 code, patterns, and standards documentation update (INSERTED)
+- Convention established: review/standards phase inserted after every execution phase and after full milestone completion (user preference for maintaining code quality and standards accuracy)
+
+### Blockers/Concerns
+
+None.
 
 ## Session Continuity
 
-Last session: 2026-02-04
-Stopped at: Completed Phase 1.3 (Review Fixes)
-Resume action: Plan and execute Phase 2 (GitHub Integration)
+Last session: 2026-02-06
+Stopped at: Completed Phase 2.1 (all 4 plans done, verified)
+Resume file: None

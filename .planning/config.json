@@ -1,6 +1,6 @@
 {
   "mode": "interactive",
-  "depth": "quick",
+  "depth": "comprehensive",
   "parallelization": true,
   "commit_docs": true,
   "model_profile": "quality",

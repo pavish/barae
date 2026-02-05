@@ -2,145 +2,148 @@
 
 ## Overview
 
-Barae delivers a git-backed blogging platform in 4 phases: authenticate users, connect their GitHub, create sites from templates, and enable content editing. Each phase builds on the previous, progressing from foundation to the complete create-edit-publish flow. Milestone 1 covers the core MVP (38 requirements).
+Milestone 1 delivers the foundation for Barae: working dev/prod infrastructure, complete authentication (email/password + GitHub OAuth), GitHub App integration with account linking and installation management, a dashboard shell with all auth and GitHub UI flows, and automated testing with CI. By the end, a user can sign up, verify their email, log in (via credentials or GitHub), link their GitHub account, view installations, and browse accessible repositories -- all tested and running in both development and production configurations.
 
 ## Phases
 
 **Phase Numbering:**
-- Integer phases (1, 2, 3, 4): Planned milestone work
+- Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [x] **Phase 1: Foundation & Auth** - User authentication with dashboard shell
-- [x] **Phase 1.1: Code Refactoring** - Improve code quality before proceeding (INSERTED)
-- [x] **Phase 1.2: Code Review** - Thoroughly review implemented code for quality and issues (INSERTED)
-- [x] **Phase 1.3: Review Fixes** - Address recommendations from code review before Phase 2 (INSERTED)
-- [ ] **Phase 2: GitHub Integration** - GitHub App installation and repo access
-- [ ] **Phase 3: Sites & Templates** - Site creation with Astro templates and GitHub Pages
-- [ ] **Phase 4: Content & Editor** - Content management with dual-mode editor
+- [x] **Phase 1: Dev Environment & Infrastructure** - Working dev/prod stack with Docker, Caddy, migrations, and initial codebase standards
+- [x] **Phase 2: Auth Backend** - Complete authentication API with email/password, OTP, sessions, and password reset
+- [x] **Phase 2.1: Review & Standards Update** (INSERTED) - Full review of Phase 1 & 2 code, patterns, and standards documentation
+- [ ] **Phase 3: Dashboard Shell & Auth Frontend** - Browser-based auth flows and the pluggable dashboard navigation shell
+- [ ] **Phase 4: GitHub App Integration** - GitHub OAuth login, account linking, webhook processing, installation and repo management
+- [ ] **Phase 5: GitHub Frontend** - Dashboard pages for GitHub account linking and installation/repo browsing
+- [ ] **Phase 6: Testing & CI** - Automated test suites and CI pipeline for regression prevention
 
 ## Phase Details
 
-### Phase 1: Foundation & Auth
-**Goal**: Users can securely access Barae and navigate a responsive dashboard
+### Phase 1: Dev Environment & Infrastructure
+**Goal**: The development and production environments are fully operational and documented
 **Depends on**: Nothing (first phase)
-**Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04, AUTH-05, AUTH-06, AUTH-07, DASH-01, DASH-02, DASH-03
+**Requirements**: INFR-01, INFR-02, INFR-03, INFR-04, INFR-05, STND-01, STND-02
 **Success Criteria** (what must be TRUE):
-  1. User can create account with email/password and verify via email link
-  2. User can log in with email/password or GitHub OAuth
-  3. User session persists across browser sessions (stays logged in)
-  4. User can reset forgotten password via email
-  5. Dashboard is responsive and works on mobile devices
-**Plans**: 3 plans
+  1. Running `docker compose up` starts the full dev stack (Fastify backend, Vite frontend, PostgreSQL, Caddy) accessible at localhost:8100
+  2. Caddy proxies frontend requests and routes `/api/` to the Fastify backend in both dev and prod configurations
+  3. Database migration script (`backend/scripts/migrate.ts`) exists and can be run independently to apply migrations
+  4. `.planning/codebase/` contains the initial project structure and pattern documentation
+  5. Environment variables are validated on startup with clear error messages for missing/invalid values
+**Plans**: 4 plans, 4 waves (sequential — one wave per execution, clear context between waves)
 
 Plans:
-- [x] 01-01-PLAN.md — Backend auth setup with better-auth + Frontend scaffold with Vite
-- [x] 01-02-PLAN.md — Auth UI (login/signup/OAuth) + Email integration (SMTP/Nodemailer)
-- [x] 01-03-PLAN.md — Dashboard shell with responsive navigation + Settings page
+- [x] 01-01-PLAN.md [wave 1] -- Backend foundation (config rewrite, TypeScript strictness, migration script, shared/ scaffold)
+- [x] 01-02-PLAN.md [wave 2] -- Frontend foundation (shadcn/ui, Vite config, path aliases, directory structure)
+- [x] 01-03-PLAN.md [wave 3] -- Docker & Caddy infrastructure (Caddy configs, root Dockerfiles, compose rewrites)
+- [ ] 01-04-PLAN.md [wave 4] -- Integration verification (STANDARDS.md update, user verifies dev stack)
 
-### Phase 1.1: Code Refactoring (INSERTED)
-**Goal**: Improve code quality and structure before building on the foundation
+### Phase 2: Auth Backend
+**Goal**: Users can create accounts, authenticate, and manage sessions through the API
 **Depends on**: Phase 1
-**Requirements**: None (technical debt / quality improvement)
+**Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-05, AUTH-06, AUTH-07, AUTH-08
 **Success Criteria** (what must be TRUE):
-  1. Code follows consistent patterns and conventions ✓
-  2. Components are properly organized and reusable ✓
-  3. No unnecessary complexity or dead code ✓
-  4. Clear separation of concerns ✓
-**Plans**: 1 plan (completed)
+  1. A new user can register with email/password and receives an OTP verification email
+  2. A verified user can log in with email/password and receives a session token
+  3. A user who forgot their password can request and complete a password reset via email
+  4. User sessions persist across browser closes and can be listed and individually revoked
+  5. A logged-in user can log out, invalidating their current session
+**Plans**: 2 plans, 2 waves (sequential -- one wave per execution, clear context between waves)
 
 Plans:
-- [x] 01.1-01: Backend refactoring (single DB, versioned routes, plugin patterns, infra docs)
+- [x] 02-01-PLAN.md [wave 1] -- Database foundation & config (standalone Drizzle client, auth schema, migration, AUTH_BASE_URL config)
+- [x] 02-02-PLAN.md [wave 2] -- better-auth integration (email transport, auth instance, Fastify route, frontend auth client)
 
-### Phase 1.2: Code Review (INSERTED)
-**Goal**: Thoroughly review all implemented code for quality, patterns, and potential issues
-**Depends on**: Phase 1.1
-**Requirements**: None (quality assurance)
-**Success Criteria** (what must be TRUE):
-  1. All code reviewed for quality, consistency, and best practices
-  2. Potential bugs, security issues, or performance problems identified
-  3. Code patterns documented and any anti-patterns flagged
-  4. Recommendations provided for improvements
-**Plans**: 3 plans
-
-Plans:
-- [x] 01.2-01-PLAN.md — Backend security audit and architecture review (14 files)
-- [x] 01.2-02-PLAN.md — Frontend auth, dashboard, and routing review (25 files)
-- [x] 01.2-03-PLAN.md — Shared components, settings review, and consolidated report (14 files)
-
-### Phase 1.3: Review Fixes (INSERTED)
-**Goal**: Address important recommendations from Phase 1.2 code review before continuing
-**Depends on**: Phase 1.2
-**Requirements**: None (quality improvements based on code review findings)
-**Success Criteria** (what must be TRUE):
-  1. Rate limiting added to /resend-verification endpoint (3 requests/hour/user)
-  2. APP_SECRET validation requires minimum 32 characters
-  3. ErrorBoundary added at React app root
-  4. Header logo uses React Router Link instead of anchor tag
-**Plans**: 1 plan
-
-Plans:
-- [x] 01.3-01-PLAN.md — Implement code review recommendations (rate limiting, APP_SECRET validation, ErrorBoundary, Header fix)
-
-### Phase 2: GitHub Integration
-**Goal**: Barae can operate on user's GitHub repositories via installed App
-**Depends on**: Phase 1
-**Requirements**: GHUB-01, GHUB-02, GHUB-03, GHUB-04, GHUB-05, GHUB-06, GHUB-07
-**Success Criteria** (what must be TRUE):
-  1. User can install Barae GitHub App to their account
-  2. User can select which repositories the App can access
-  3. Barae can create repositories and read/write files on user's behalf
-  4. Installation tokens refresh automatically (no user action required)
-**Plans**: TBD
-
-Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
-
-### Phase 3: Sites & Templates
-**Goal**: Users can create Astro blog sites deployed to GitHub Pages
+### Phase 2.1: Review & Standards Update (INSERTED)
+**Goal**: All Phase 1 & 2 code, architecture, and patterns are reviewed for quality and consistency; codebase standards documentation is added and updated to reflect what was built
 **Depends on**: Phase 2
-**Requirements**: SITE-01, SITE-02, SITE-03, SITE-04, SITE-05, SITE-06, SITE-07, FEED-01
+**Requirements**: STND-01, STND-02 (review & update)
 **Success Criteria** (what must be TRUE):
-  1. User can create a new site (new repo or connect existing)
-  2. Site uses selected theme and is a standard Astro project
-  3. GitHub Actions builds site automatically on push
-  4. Site is live on GitHub Pages after creation
+  1. All Phase 1 & 2 code has been reviewed for consistency, correctness, and adherence to project patterns
+  2. Identified issues (code quality, missed patterns, inconsistencies) are documented and fixed
+  3. `.planning/codebase/` standards documents are updated to reflect actual patterns established in Phases 1 & 2
+  4. `.claude/` instructions are updated with any new conventions or rules discovered during review
+  5. Technical debt or deferred items are captured as todos for future phases
+**Plans**: 4 plans, 3 waves (wave 1 parallel, then sequential — one wave per execution, clear context between waves)
+
+Plans:
+- [x] 02.1-01-PLAN.md [wave 1] — Standards documentation (create backend.md, frontend.md, typescript.md, docker.md, dependencies.md, migrations.md + CLAUDE.md)
+- [x] 02.1-02-PLAN.md [wave 1] — Backend cleanup (remove unused deps, fix eslint, rename migration)
+- [x] 02.1-03-PLAN.md [wave 2] — Config refactor (@fastify/env, plugin-scoped db+auth init, close-with-grace, fix email error handling)
+- [x] 02.1-04-PLAN.md [wave 3] — Final sync (update standards docs to match actual code, update STATE.md, human verification)
+
+### Phase 3: Dashboard Shell & Auth Frontend
+**Goal**: Users can sign up, verify, log in, reset password, and navigate a dashboard through the browser
+**Depends on**: Phase 2
+**Requirements**: FRNT-01, FRNT-02, FRNT-03, FRNT-04, FRNT-05
+**Success Criteria** (what must be TRUE):
+  1. A visitor can sign up with email/password and complete OTP email verification in the browser
+  2. A returning user can log in with email/password (with GitHub OAuth button visible for Phase 4)
+  3. A user who forgot their password can request and complete a reset through the browser
+  4. An authenticated user sees a dashboard with navigation layout that serves as the shell for all future features
 **Plans**: TBD
 
 Plans:
 - [ ] 03-01: TBD
 - [ ] 03-02: TBD
 
-### Phase 4: Content & Editor
-**Goal**: Users can create and edit content with dual-mode editor
-**Depends on**: Phase 3
-**Requirements**: CONT-01, CONT-02, CONT-03, CONT-04, CONT-05, CONT-06, CONT-07, CONT-08, EDIT-01, EDIT-02, EDIT-03, EDIT-04, EDIT-05, EDIT-06, EDIT-07, IMG-01, IMG-02
+### Phase 4: GitHub App Integration
+**Goal**: Users can log in via GitHub OAuth and link their GitHub account to manage installations
+**Depends on**: Phase 2
+**Requirements**: AUTH-04, GHUB-01, GHUB-02, GHUB-03, GHUB-04, GHUB-05, GHUB-06
 **Success Criteria** (what must be TRUE):
-  1. User can create, edit, and delete blog posts and static pages
-  2. User can write in raw markdown or visual mode, toggling between them
-  3. Changes sync correctly between modes without data loss
-  4. User can upload images that are stored in the git repo
-  5. Content changes commit to user's GitHub repository
+  1. A user can log in via GitHub OAuth, creating a Barae account if none exists
+  2. An email-signup user can link their GitHub account from settings (one-to-one mapping)
+  3. The system processes GitHub App installation webhooks and reflects installation status internally
+  4. A user can view which GitHub orgs/accounts have the Barae App installed and see accessible repositories
+  5. Domain models for GitHub accounts and installations persist correctly with proper relationships
 **Plans**: TBD
 
 Plans:
 - [ ] 04-01: TBD
 - [ ] 04-02: TBD
-- [ ] 04-03: TBD
+
+### Phase 5: GitHub Frontend
+**Goal**: Users can manage their GitHub connection and view installations through the dashboard
+**Depends on**: Phase 3, Phase 4
+**Requirements**: FRNT-06, FRNT-07
+**Success Criteria** (what must be TRUE):
+  1. A user can navigate to settings and link/view their connected GitHub account
+  2. A user can view their GitHub App installations and browse accessible repositories per installation
+**Plans**: TBD
+
+Plans:
+- [ ] 05-01: TBD
+
+### Phase 6: Testing & CI
+**Goal**: The codebase has automated test coverage and a CI pipeline that catches regressions
+**Depends on**: Phase 3, Phase 5
+**Requirements**: TEST-01, TEST-02, TEST-03, TEST-04
+**Success Criteria** (what must be TRUE):
+  1. Backend API tests verify auth and GitHub integration routes (run via `vitest`)
+  2. Frontend component tests verify critical UI components render and behave correctly
+  3. E2E tests walk through core user flows (signup, login, GitHub linking) in a real browser
+  4. CI pipeline runs all test suites on main branch commits and pull request events, reporting pass/fail status
+**Plans**: TBD
+
+Plans:
+- [ ] 06-01: TBD
+- [ ] 06-02: TBD
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 1.1 -> 1.2 -> 2 -> 3 -> 4
+Phases execute in numeric order: 1 -> 2 -> 2.1 -> 3 -> 4 -> 5 -> 6
+Note: Phases 3 and 4 both depend on Phase 2. Phase 4 can begin once Phase 2 completes (it does not need Phase 3). Phase 5 needs both Phase 3 (dashboard shell) and Phase 4 (GitHub backend).
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Auth | 3/3 | Complete | 2026-02-03 |
-| 1.1 Code Refactoring | 1/1 | Complete | 2026-02-03 |
-| 1.2 Code Review | 3/3 | Complete | 2026-02-04 |
-| 1.3 Review Fixes | 1/1 | Complete | 2026-02-04 |
-| 2. GitHub Integration | 0/2 | Not started | - |
-| 3. Sites & Templates | 0/2 | Not started | - |
-| 4. Content & Editor | 0/3 | Not started | - |
+| 1. Dev Environment & Infrastructure | 4/4 | Complete | 2026-02-05 |
+| 2. Auth Backend | 2/2 | Complete | 2026-02-05 |
+| 2.1. Review & Standards Update (INSERTED) | 4/4 | Complete | 2026-02-06 |
+| 3. Dashboard Shell & Auth Frontend | 0/TBD | Not started | - |
+| 4. GitHub App Integration | 0/TBD | Not started | - |
+| 5. GitHub Frontend | 0/TBD | Not started | - |
+| 6. Testing & CI | 0/TBD | Not started | - |
