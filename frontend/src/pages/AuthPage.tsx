@@ -1,4 +1,8 @@
+import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
+import { Info } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { LoginForm } from '@/components/auth/LoginForm'
@@ -9,11 +13,23 @@ import { ResetPasswordForm } from '@/components/auth/ResetPasswordForm'
 
 export function AuthPage() {
   const { view, email, setView } = useAuthStore()
+  const location = useLocation()
+  const [showExpired, setShowExpired] = useState(false)
+
+  useEffect(() => {
+    const state = location.state as { expired?: boolean } | null
+    if (state?.expired) {
+      setShowExpired(true)
+      setView('login')
+      window.history.replaceState({}, '')
+    }
+  }, [location.state, setView])
 
   const activeTab = view === 'signup' ? 'signup' : 'login'
 
   function handleTabChange(value: string) {
     if (value === 'login' || value === 'signup') {
+      setShowExpired(false)
       setView(value)
     }
   }
@@ -37,7 +53,15 @@ export function AuthPage() {
 
       {/* Right: Auth form area */}
       <div className="flex items-center justify-center p-6 sm:p-8">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md space-y-4">
+          {showExpired && (
+            <Alert>
+              <Info />
+              <AlertDescription>
+                Your session has expired. Please sign in again.
+              </AlertDescription>
+            </Alert>
+          )}
           {renderView(view, email, activeTab, handleTabChange)}
         </div>
       </div>
