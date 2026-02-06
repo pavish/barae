@@ -60,32 +60,40 @@ export function ResetPasswordForm({ email }: ResetPasswordFormProps) {
     }
 
     setFormError(null)
-    const { error } = await authClient.emailOtp.resetPassword({
-      email,
-      otp,
-      password: data.password,
-    })
-    if (error) {
-      setFormError(error.message ?? 'Could not reset password')
-      return
+    try {
+      const { error } = await authClient.emailOtp.resetPassword({
+        email,
+        otp,
+        password: data.password,
+      })
+      if (error) {
+        setFormError(error.message ?? 'Could not reset password')
+        return
+      }
+      setSuccess(true)
+    } catch {
+      setFormError('Something went wrong. Please try again.')
     }
-    setSuccess(true)
   }
 
   async function handleResend() {
     setFormError(null)
     setIsResending(true)
-    const { error } = await authClient.emailOtp.sendVerificationOtp({
-      email,
-      type: 'forget-password',
-    })
-    setIsResending(false)
-
-    if (error) {
-      setFormError(error.message ?? 'Could not resend code')
-      return
+    try {
+      const { error } = await authClient.emailOtp.sendVerificationOtp({
+        email,
+        type: 'forget-password',
+      })
+      if (error) {
+        setFormError(error.message ?? 'Could not resend code')
+        return
+      }
+      startCooldown()
+    } catch {
+      setFormError('Something went wrong. Please try again.')
+    } finally {
+      setIsResending(false)
     }
-    startCooldown()
   }
 
   if (success) {

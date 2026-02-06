@@ -28,17 +28,21 @@ export function SignupForm() {
 
   async function onSubmit(data: SignupFormData) {
     setFormError(null)
-    const { error } = await authClient.signUp.email({
-      name: data.name,
-      email: data.email,
-      password: data.password,
-    })
-    if (error) {
-      setFormError(error.message ?? 'Could not create account')
-      return
+    try {
+      const { error } = await authClient.signUp.email({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      })
+      if (error) {
+        setFormError(error.message ?? 'Could not create account')
+        return
+      }
+      setOtpAutoSent(true)
+      setViewWithEmail('verify-otp', data.email)
+    } catch {
+      setFormError('Something went wrong. Please try again.')
     }
-    setOtpAutoSent(true)
-    setViewWithEmail('verify-otp', data.email)
   }
 
   return (

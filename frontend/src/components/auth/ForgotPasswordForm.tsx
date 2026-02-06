@@ -28,14 +28,18 @@ export function ForgotPasswordForm() {
 
   async function onSubmit(data: ForgotPasswordFormData) {
     setFormError(null)
-    const { error } = await authClient.emailOtp.requestPasswordReset({
-      email: data.email,
-    })
-    if (error) {
-      setFormError(error.message ?? 'Could not send reset code')
-      return
+    try {
+      const { error } = await authClient.emailOtp.requestPasswordReset({
+        email: data.email,
+      })
+      if (error) {
+        setFormError(error.message ?? 'Could not send reset code')
+        return
+      }
+      setViewWithEmail('reset-password', data.email)
+    } catch {
+      setFormError('Something went wrong. Please try again.')
     }
-    setViewWithEmail('reset-password', data.email)
   }
 
   return (

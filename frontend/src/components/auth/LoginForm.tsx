@@ -33,24 +33,32 @@ export function LoginForm({ defaultEmail }: LoginFormProps) {
 
   async function onSubmit(data: LoginFormData) {
     setFormError(null)
-    const { error } = await authClient.signIn.email({
-      email: data.email,
-      password: data.password,
-    })
-    if (error) {
-      if (error.code === 'EMAIL_NOT_VERIFIED') {
-        // Attempt to send verification OTP from the frontend.
-        // If server rate-limits (429), an OTP already exists — no cooldown needed.
-        // If success, a new OTP was sent — start the 60s cooldown.
-        const { error: otpError } = await authClient.emailOtp.sendVerificationOtp({
-          email: data.email,
-          type: 'email-verification',
-        })
-        setOtpAutoSent(!otpError)
-        setViewWithEmail('verify-otp', data.email)
-        return
+    try {
+      const { error } = await authClient.signIn.email({
+        email: data.email,
+        password: data.password,
+      })
+      if (error) {
+        if (error.code === 'EMAIL_NOT_VERIFIED') {
+          // Attempt to send verification OTP from the frontend.
+          // If server rate-limits (429), an OTP already exists — no cooldown needed.
+          // If success, a new OTP was sent — start the 60s cooldown.
+          const { error: otpError } = await authClient.emailOtp.sendVerificationOtp({
+            email: data.email,
+            type: 'email-verification',
+          })
+          if (otpError) {
+            setFormError('Your email is not verified. Could not send verification code. Please try again.')
+            return
+          }
+          setOtpAutoSent(true)
+          setViewWithEmail('verify-otp', data.email)
+          return
+        }
+        setFormError(error.message ?? 'Invalid credentials')
       }
-      setFormError(error.message ?? 'Invalid credentials')
+    } catch {
+      setFormError('Something went wrong. Please try again.')
     }
   }
 

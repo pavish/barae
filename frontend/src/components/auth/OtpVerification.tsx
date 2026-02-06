@@ -85,27 +85,32 @@ export function OtpVerification({ email, type }: OtpVerificationProps) {
       setError(null)
       setIsVerifying(true)
 
-      const { error: verifyError } = await authClient.emailOtp.verifyEmail({
-        email,
-        otp: value,
-      })
+      try {
+        const { error: verifyError } = await authClient.emailOtp.verifyEmail({
+          email,
+          otp: value,
+        })
 
-      setIsVerifying(false)
+        if (verifyError) {
+          const newFailedAttempts = failedAttempts + 1
+          setFailedAttempts(newFailedAttempts)
+          setError(verifyError.message ?? 'Invalid verification code')
+          setOtp('')
 
-      if (verifyError) {
-        const newFailedAttempts = failedAttempts + 1
-        setFailedAttempts(newFailedAttempts)
-        setError(verifyError.message ?? 'Invalid verification code')
-        setOtp('')
-
-        if (newFailedAttempts >= MAX_FAILED_ATTEMPTS) {
-          const expiry = Date.now() + LOCKOUT_DURATION_MS
-          setLockoutUntil(expiry)
-          localStorage.setItem(LOCKOUT_KEY, String(expiry))
+          if (newFailedAttempts >= MAX_FAILED_ATTEMPTS) {
+            const expiry = Date.now() + LOCKOUT_DURATION_MS
+            setLockoutUntil(expiry)
+            localStorage.setItem(LOCKOUT_KEY, String(expiry))
+          }
         }
+        // On success, better-auth auto-signs in (autoSignInAfterVerification enabled).
+        // AuthLayout guard will detect the session and redirect to dashboard.
+      } catch {
+        setError('Something went wrong. Please try again.')
+        setOtp('')
+      } finally {
+        setIsVerifying(false)
       }
-      // On success, better-auth auto-signs in (autoSignInAfterVerification enabled).
-      // AuthLayout guard will detect the session and redirect to dashboard.
     },
     [email, failedAttempts, isLockedOut],
   )
@@ -113,17 +118,21 @@ export function OtpVerification({ email, type }: OtpVerificationProps) {
   async function handleResend() {
     setError(null)
     setIsResending(true)
-    const { error: resendError } = await authClient.emailOtp.sendVerificationOtp({
-      email,
-      type,
-    })
-    setIsResending(false)
-
-    if (resendError) {
-      setError(resendError.message ?? 'Could not resend code')
-      return
+    try {
+      const { error: resendError } = await authClient.emailOtp.sendVerificationOtp({
+        email,
+        type,
+      })
+      if (resendError) {
+        setError(resendError.message ?? 'Could not resend code')
+        return
+      }
+      startCooldown()
+    } catch {
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setIsResending(false)
     }
-    startCooldown()
   }
 
   const lockoutMinutes = Math.ceil(lockoutSecondsLeft / 60)

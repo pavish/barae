@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Info } from 'lucide-react'
-import { useAuthStore } from '@/stores/authStore'
+import { useAuthStore, type AuthView } from '@/stores/authStore'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
@@ -62,7 +62,7 @@ export function AuthPage() {
               </AlertDescription>
             </Alert>
           )}
-          {renderView(view, email, activeTab, handleTabChange)}
+          {renderView(view, email, activeTab, handleTabChange, setView)}
         </div>
       </div>
     </div>
@@ -70,10 +70,11 @@ export function AuthPage() {
 }
 
 function renderView(
-  view: string,
+  view: AuthView,
   email: string,
   activeTab: string,
   onTabChange: (value: string) => void,
+  setView: (view: AuthView) => void,
 ) {
   switch (view) {
     case 'login':
@@ -108,12 +109,20 @@ function renderView(
       )
 
     case 'verify-otp':
+      if (!email) {
+        setView('login')
+        return null
+      }
       return <OtpVerification email={email} type="email-verification" />
 
     case 'forgot-password':
       return <ForgotPasswordForm />
 
     case 'reset-password':
+      if (!email) {
+        setView('login')
+        return null
+      }
       return <ResetPasswordForm email={email} />
 
     default:
