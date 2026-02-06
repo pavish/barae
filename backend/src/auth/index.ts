@@ -49,6 +49,7 @@ export default fp(
         emailOTP({
           otpLength: 6,
           expiresIn: 300,
+          overrideDefaultEmailVerification: true,
           sendVerificationOnSignUp: true,
           sendVerificationOTP: async ({ email, otp, type }) => {
             const subjects: Record<string, string> = {
