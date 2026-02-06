@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { authClient } from '@/lib/auth'
 import { FullScreenLoader } from '@/components/layout/FullScreenLoader'
+import { DashboardShell } from '@/components/layout/DashboardShell'
 
 export function DashboardLayout() {
   const { data: session, isPending } = authClient.useSession()
@@ -10,5 +11,9 @@ export function DashboardLayout() {
   if (!session)
     return <Navigate to="/auth" state={{ from: location }} replace />
 
-  return <Outlet />
+  return (
+    <DashboardShell session={session}>
+      <Outlet />
+    </DashboardShell>
+  )
 }
