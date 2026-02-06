@@ -86,7 +86,7 @@ Plans:
 **Plans**: 4 plans, 3 waves (wave 1 sequential, wave 2 parallel, wave 3 sequential — one wave per execution, clear context between waves)
 
 Plans:
-- [ ] 03-01-PLAN.md [wave 1] — Foundation & routing infrastructure (shadcn/ui install, schemas, store, routes, layouts, app integration)
+- [x] 03-01-PLAN.md [wave 1] — Foundation & routing infrastructure (shadcn/ui install, schemas, store, routes, layouts, app integration)
 - [ ] 03-02-PLAN.md [wave 2] — Auth page & forms (login, signup, OTP verification, forgot-password, reset-password)
 - [ ] 03-03-PLAN.md [wave 2] — Dashboard shell & pages (responsive layout, header, nav, user menu, home, settings, session management)
 - [ ] 03-04-PLAN.md [wave 3] — Integration & verification (session-expired message, human verification of all flows)
@@ -145,7 +145,7 @@ Note: Phases 3 and 4 both depend on Phase 2. Phase 4 can begin once Phase 2 comp
 | 1. Dev Environment & Infrastructure | 4/4 | Complete | 2026-02-05 |
 | 2. Auth Backend | 2/2 | Complete | 2026-02-05 |
 | 2.1. Review & Standards Update (INSERTED) | 4/4 | Complete | 2026-02-06 |
-| 3. Dashboard Shell & Auth Frontend | 0/TBD | Not started | - |
+| 3. Dashboard Shell & Auth Frontend | 1/4 | In progress | - |
 | 4. GitHub App Integration | 0/TBD | Not started | - |
 | 5. GitHub Frontend | 0/TBD | Not started | - |
 | 6. Testing & CI | 0/TBD | Not started | - |
