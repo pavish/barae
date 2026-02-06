@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Built for long-term maintenance, not just initial site creation. Users own their content in git -- standard Astro projects, portable, not locked into Barae.
-**Current focus:** Phase 3 in progress. Plan 01 complete (foundation & routing). Next: Plans 02 & 03 (auth forms + dashboard shell).
+**Current focus:** Phase 3 in progress. Plans 01-03 complete (foundation, routing, auth forms, dashboard shell). Next: Plan 04 (integration verification).
 
 ## Current Position
 
 Phase: 3 of 6 (Dashboard Shell & Auth Frontend)
-Plan: 1 of 4 in current phase
+Plan: 3 of 4 in current phase
 Status: In progress
-Last activity: 2026-02-06 -- Completed 03-01-PLAN.md
+Last activity: 2026-02-06 -- Completed 03-03-PLAN.md
 
-Progress: [███████░░░] ~65%
+Progress: [████████░░] ~76%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
+- Total plans completed: 13
 - Average duration: ~5min
-- Total execution time: ~57min
+- Total execution time: ~64min
 
 **By Phase:**
 
@@ -30,11 +30,11 @@ Progress: [███████░░░] ~65%
 | 1 | 4/4 | ~16min | ~4min |
 | 2 | 2/2 | ~14min | ~7min |
 | 2.1 | 4/4 | ~25min | ~6min |
-| 3 | 1/4 | ~2min | ~2min |
+| 3 | 3/4 | ~9min | ~3min |
 
 **Recent Trend:**
-- Last 5 plans: 02.1-01 (~5min), 02.1-03 (~5min), 02.1-04 (~13min), 02.1-02 (~2min), 03-01 (~2min)
-- Trend: fast (03-01 was CLI installs + file creation, no complex logic)
+- Last 5 plans: 02.1-04 (~13min), 02.1-02 (~2min), 03-01 (~2min), 03-02 (~4min), 03-03 (~3min)
+- Trend: fast (shell components + page building, straightforward wiring)
 
 *Updated after each plan completion*
 
@@ -97,12 +97,16 @@ Recent decisions affecting current work:
 - [02.1-04]: API versioning enforced: /v1/auth/*, AUTH_BASE_URL includes /api/v1
 - [02.1-04]: Frontend auth client baseURL: /api/v1 (was /api)
 
-**Phase 3 decisions** (Plan 01):
+**Phase 3 decisions** (Plans 01-03):
 - [03-01]: AuthLayout and DashboardLayout are separate layout route components (not a single guard HOC)
 - [03-01]: DashboardLayout does NOT include dashboard shell yet -- shell wraps Outlet in Plan 03
 - [03-01]: Auth view state machine uses Zustand (login/signup/verify-otp/forgot-password/reset-password)
 - [03-01]: 401 detection dispatches auth:expired CustomEvent (decoupled from routing)
 - [03-01]: label.tsx auto-installed as field.tsx dependency by shadcn CLI
+- [03-03]: Session hooks (useSessionPolling, useAuthExpiry) wired inside DashboardShell, active for all dashboard routes
+- [03-03]: SettingsPage reads session via authClient.useSession() (Outlet child, no prop drilling)
+- [03-03]: AuthPage expired-session message is cross-plan note for Plan 04 integration
+- [03-03]: Navigation items as const arrays for easy extension in future phases
 
 ### Pending Todos
 
@@ -121,5 +125,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-06
-Stopped at: Completed 03-01-PLAN.md
+Stopped at: Completed 03-03-PLAN.md
 Resume file: None
