@@ -5,3 +5,5 @@ export const authClient = createAuthClient({
   baseURL: '/api/v1',
   plugins: [emailOTPClient()],
 })
+
+export type Session = typeof authClient.$Infer.Session

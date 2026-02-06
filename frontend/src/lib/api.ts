@@ -13,6 +13,11 @@ export async function apiFetch<T>(
     ...options,
   })
 
+  if (response.status === 401) {
+    window.dispatchEvent(new CustomEvent('auth:expired'))
+    throw new Error('Session expired')
+  }
+
   if (!response.ok) {
     const error = await response
       .json()
