@@ -3,6 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { SignupForm } from '@/components/auth/SignupForm'
+import { OtpVerification } from '@/components/auth/OtpVerification'
+import { ForgotPasswordForm } from '@/components/auth/ForgotPasswordForm'
+import { ResetPasswordForm } from '@/components/auth/ResetPasswordForm'
 
 export function AuthPage() {
   const { view, email, setView } = useAuthStore()
@@ -81,55 +84,13 @@ function renderView(
       )
 
     case 'verify-otp':
-      return (
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-xl">Verify your email</CardTitle>
-            <CardDescription>
-              We sent a verification code to {email}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground text-center">
-              OTP verification coming in Task 2
-            </p>
-          </CardContent>
-        </Card>
-      )
+      return <OtpVerification email={email} type="email-verification" />
 
     case 'forgot-password':
-      return (
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-xl">Forgot password</CardTitle>
-            <CardDescription>
-              Enter your email to receive a reset code
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground text-center">
-              Forgot password form coming in Task 2
-            </p>
-          </CardContent>
-        </Card>
-      )
+      return <ForgotPasswordForm />
 
     case 'reset-password':
-      return (
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-xl">Reset password</CardTitle>
-            <CardDescription>
-              Enter the code sent to {email} and your new password
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground text-center">
-              Reset password form coming in Task 2
-            </p>
-          </CardContent>
-        </Card>
-      )
+      return <ResetPasswordForm email={email} />
 
     default:
       return null
