@@ -103,6 +103,11 @@ Recent decisions affecting current work:
 - [03-01]: Auth view state machine uses Zustand (login/signup/verify-otp/forgot-password/reset-password)
 - [03-01]: 401 detection dispatches auth:expired CustomEvent (decoupled from routing)
 - [03-01]: label.tsx auto-installed as field.tsx dependency by shadcn CLI
+- [03-02]: OTP lockout (30min / 3 attempts) stored in localStorage under barae:otp-lockout
+- [03-02]: Password reset success auto-redirects to login after 2 seconds with email pre-filled
+- [03-02]: Form-level errors use AuthErrorBanner (Alert destructive), no toasts anywhere
+- [03-02]: GitHub OAuth button disabled with "Coming soon" Badge on both login and signup forms
+- [03-02]: Controller + Field + FieldLabel + FieldError pattern established for all auth forms
 - [03-03]: Session hooks (useSessionPolling, useAuthExpiry) wired inside DashboardShell, active for all dashboard routes
 - [03-03]: SettingsPage reads session via authClient.useSession() (Outlet child, no prop drilling)
 - [03-03]: AuthPage expired-session message is cross-plan note for Plan 04 integration
