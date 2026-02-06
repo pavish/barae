@@ -22,6 +22,7 @@ interface OtpVerificationProps {
 
 export function OtpVerification({ email, type }: OtpVerificationProps) {
   const reset = useAuthStore((s) => s.reset)
+  const otpAutoSent = useAuthStore((s) => s.otpAutoSent)
   const { canResend, secondsLeft, startCooldown } = useOtpCooldown(60)
 
   const [otp, setOtp] = useState('')
@@ -45,10 +46,13 @@ export function OtpVerification({ email, type }: OtpVerificationProps) {
     }
   }, [])
 
-  // Start cooldown on mount (OTP was already sent)
+  // Start cooldown on mount only when an OTP was just sent
+  // (signup always sends, login only sends when no valid OTP exists)
   useEffect(() => {
-    startCooldown()
-  }, [startCooldown])
+    if (otpAutoSent) {
+      startCooldown()
+    }
+  }, [startCooldown, otpAutoSent])
 
   // Lockout countdown timer
   useEffect(() => {
@@ -100,7 +104,7 @@ export function OtpVerification({ email, type }: OtpVerificationProps) {
           localStorage.setItem(LOCKOUT_KEY, String(expiry))
         }
       }
-      // On success, better-auth auto-signs in (autoSignIn enabled on signup).
+      // On success, better-auth auto-signs in (autoSignInAfterVerification enabled).
       // AuthLayout guard will detect the session and redirect to dashboard.
     },
     [email, failedAttempts, isLockedOut],

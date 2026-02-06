@@ -14,6 +14,7 @@ import { AuthErrorBanner } from '@/components/auth/AuthErrorBanner'
 
 export function SignupForm() {
   const setViewWithEmail = useAuthStore((s) => s.setViewWithEmail)
+  const setOtpAutoSent = useAuthStore((s) => s.setOtpAutoSent)
   const [formError, setFormError] = useState<string | null>(null)
 
   const {
@@ -36,6 +37,7 @@ export function SignupForm() {
       setFormError(error.message ?? 'Could not create account')
       return
     }
+    setOtpAutoSent(true)
     setViewWithEmail('verify-otp', data.email)
   }
 

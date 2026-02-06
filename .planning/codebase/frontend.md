@@ -29,7 +29,7 @@ const data = await fetch('http://localhost:3000/v1/users/me')
 
 ## Authentication Client
 
-- **better-auth React client** in `lib/auth.ts`. Uses relative `/api` baseURL with no environment variables.
+- **better-auth React client** in `lib/auth.ts`. Uses `window.location.origin` as baseURL (better-auth requires a full URL with protocol) and explicit `basePath` matching the server's `basePath`.
 - **Plugins must match server plugins.** If the server uses `emailOTP`, the client must include `emailOTPClient()`.
 
 ```typescript
@@ -37,7 +37,8 @@ import { createAuthClient } from 'better-auth/react'
 import { emailOTPClient } from 'better-auth/client/plugins'
 
 export const authClient = createAuthClient({
-  baseURL: '/api',
+  baseURL: window.location.origin,
+  basePath: '/api/v1/auth',
   plugins: [emailOTPClient()],
 })
 ```

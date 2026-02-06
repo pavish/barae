@@ -18,6 +18,8 @@ interface LoginFormProps {
 
 export function LoginForm({ defaultEmail }: LoginFormProps) {
   const setView = useAuthStore((s) => s.setView)
+  const setViewWithEmail = useAuthStore((s) => s.setViewWithEmail)
+  const setOtpAutoSent = useAuthStore((s) => s.setOtpAutoSent)
   const [formError, setFormError] = useState<string | null>(null)
 
   const {
@@ -36,6 +38,18 @@ export function LoginForm({ defaultEmail }: LoginFormProps) {
       password: data.password,
     })
     if (error) {
+      if (error.code === 'EMAIL_NOT_VERIFIED') {
+        // Attempt to send verification OTP from the frontend.
+        // If server rate-limits (429), an OTP already exists — no cooldown needed.
+        // If success, a new OTP was sent — start the 60s cooldown.
+        const { error: otpError } = await authClient.emailOtp.sendVerificationOtp({
+          email: data.email,
+          type: 'email-verification',
+        })
+        setOtpAutoSent(!otpError)
+        setViewWithEmail('verify-otp', data.email)
+        return
+      }
       setFormError(error.message ?? 'Invalid credentials')
     }
   }

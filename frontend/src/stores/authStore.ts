@@ -10,17 +10,21 @@ export type AuthView =
 interface AuthStore {
   view: AuthView
   email: string
+  otpAutoSent: boolean
   setView: (view: AuthView) => void
   setEmail: (email: string) => void
   setViewWithEmail: (view: AuthView, email: string) => void
+  setOtpAutoSent: (value: boolean) => void
   reset: () => void
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
   view: 'login',
   email: '',
+  otpAutoSent: false,
   setView: (view) => set({ view }),
   setEmail: (email) => set({ email }),
   setViewWithEmail: (view, email) => set({ view, email }),
-  reset: () => set({ view: 'login', email: '' }),
+  setOtpAutoSent: (value) => set({ otpAutoSent: value }),
+  reset: () => set({ view: 'login', email: '', otpAutoSent: false }),
 }))
