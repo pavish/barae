@@ -2,6 +2,8 @@ import type { ReactNode } from 'react'
 import type { Session } from '@/lib/auth'
 import { Header } from '@/components/layout/Header'
 import { BottomTabs } from '@/components/layout/BottomTabs'
+import { useSessionPolling } from '@/hooks/useSessionPolling'
+import { useAuthExpiry } from '@/hooks/useAuthExpiry'
 
 interface DashboardShellProps {
   children: ReactNode
@@ -9,6 +11,9 @@ interface DashboardShellProps {
 }
 
 export function DashboardShell({ children, session }: DashboardShellProps) {
+  useSessionPolling()
+  useAuthExpiry()
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header session={session} />
