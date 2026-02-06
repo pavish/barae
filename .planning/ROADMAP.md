@@ -83,11 +83,13 @@ Plans:
   2. A returning user can log in with email/password (with GitHub OAuth button visible for Phase 4)
   3. A user who forgot their password can request and complete a reset through the browser
   4. An authenticated user sees a dashboard with navigation layout that serves as the shell for all future features
-**Plans**: TBD
+**Plans**: 4 plans, 3 waves (wave 1 sequential, wave 2 parallel, wave 3 sequential — one wave per execution, clear context between waves)
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
+- [ ] 03-01-PLAN.md [wave 1] — Foundation & routing infrastructure (shadcn/ui install, schemas, store, routes, layouts, app integration)
+- [ ] 03-02-PLAN.md [wave 2] — Auth page & forms (login, signup, OTP verification, forgot-password, reset-password)
+- [ ] 03-03-PLAN.md [wave 2] — Dashboard shell & pages (responsive layout, header, nav, user menu, home, settings, session management)
+- [ ] 03-04-PLAN.md [wave 3] — Integration & verification (session-expired message, human verification of all flows)
 
 ### Phase 4: GitHub App Integration
 **Goal**: Users can log in via GitHub OAuth and link their GitHub account to manage installations
