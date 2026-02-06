@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Dev Environment & Infrastructure** - Working dev/prod stack with Docker, Caddy, migrations, and initial codebase standards
 - [x] **Phase 2: Auth Backend** - Complete authentication API with email/password, OTP, sessions, and password reset
 - [x] **Phase 2.1: Review & Standards Update** (INSERTED) - Full review of Phase 1 & 2 code, patterns, and standards documentation
-- [ ] **Phase 3: Dashboard Shell & Auth Frontend** - Browser-based auth flows and the pluggable dashboard navigation shell
+- [x] **Phase 3: Dashboard Shell & Auth Frontend** - Browser-based auth flows and the pluggable dashboard navigation shell
 - [ ] **Phase 4: GitHub App Integration** - GitHub OAuth login, account linking, webhook processing, installation and repo management
 - [ ] **Phase 5: GitHub Frontend** - Dashboard pages for GitHub account linking and installation/repo browsing
 - [ ] **Phase 6: Testing & CI** - Automated test suites and CI pipeline for regression prevention
@@ -87,9 +87,9 @@ Plans:
 
 Plans:
 - [x] 03-01-PLAN.md [wave 1] — Foundation & routing infrastructure (shadcn/ui install, schemas, store, routes, layouts, app integration)
-- [ ] 03-02-PLAN.md [wave 2] — Auth page & forms (login, signup, OTP verification, forgot-password, reset-password)
-- [ ] 03-03-PLAN.md [wave 2] — Dashboard shell & pages (responsive layout, header, nav, user menu, home, settings, session management)
-- [ ] 03-04-PLAN.md [wave 3] — Integration & verification (session-expired message, human verification of all flows)
+- [x] 03-02-PLAN.md [wave 2] — Auth page & forms (login, signup, OTP verification, forgot-password, reset-password)
+- [x] 03-03-PLAN.md [wave 2] — Dashboard shell & pages (responsive layout, header, nav, user menu, home, settings, session management)
+- [x] 03-04-PLAN.md [wave 3] — Integration & verification (session-expired message, human verification of all flows)
 
 ### Phase 4: GitHub App Integration
 **Goal**: Users can log in via GitHub OAuth and link their GitHub account to manage installations
@@ -145,7 +145,7 @@ Note: Phases 3 and 4 both depend on Phase 2. Phase 4 can begin once Phase 2 comp
 | 1. Dev Environment & Infrastructure | 4/4 | Complete | 2026-02-05 |
 | 2. Auth Backend | 2/2 | Complete | 2026-02-05 |
 | 2.1. Review & Standards Update (INSERTED) | 4/4 | Complete | 2026-02-06 |
-| 3. Dashboard Shell & Auth Frontend | 1/4 | In progress | - |
+| 3. Dashboard Shell & Auth Frontend | 4/4 | Complete | 2026-02-07 |
 | 4. GitHub App Integration | 0/TBD | Not started | - |
 | 5. GitHub Frontend | 0/TBD | Not started | - |
 | 6. Testing & CI | 0/TBD | Not started | - |

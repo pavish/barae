@@ -49,11 +49,11 @@ Requirements for Milestone 1: Foundation & Integration.
 
 ### Frontend
 
-- [ ] **FRNT-01**: Login page with email/password and GitHub OAuth option
-- [ ] **FRNT-02**: Signup page with email/password
-- [ ] **FRNT-03**: OTP email verification page
-- [ ] **FRNT-04**: Password reset flow (request + reset pages)
-- [ ] **FRNT-05**: Dashboard shell with navigation layout (pluggable for future features)
+- [x] **FRNT-01**: Login page with email/password and GitHub OAuth option
+- [x] **FRNT-02**: Signup page with email/password
+- [x] **FRNT-03**: OTP email verification page
+- [x] **FRNT-04**: Password reset flow (request + reset pages)
+- [x] **FRNT-05**: Dashboard shell with navigation layout (pluggable for future features)
 - [ ] **FRNT-06**: GitHub account linking page in settings
 - [ ] **FRNT-07**: GitHub installations and accessible repos view
 
@@ -126,11 +126,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TEST-04 | Phase 6 | Pending |
 | STND-01 | Phase 1 | Complete |
 | STND-02 | Phase 1 | Complete |
-| FRNT-01 | Phase 3 | Pending |
-| FRNT-02 | Phase 3 | Pending |
-| FRNT-03 | Phase 3 | Pending |
-| FRNT-04 | Phase 3 | Pending |
-| FRNT-05 | Phase 3 | Pending |
+| FRNT-01 | Phase 3 | Complete |
+| FRNT-02 | Phase 3 | Complete |
+| FRNT-03 | Phase 3 | Complete |
+| FRNT-04 | Phase 3 | Complete |
+| FRNT-05 | Phase 3 | Complete |
 | FRNT-06 | Phase 5 | Pending |
 | FRNT-07 | Phase 5 | Pending |
 
@@ -141,4 +141,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-05*
-*Last updated: 2026-02-05 after roadmap creation*
+*Last updated: 2026-02-07 after Phase 3 completion*
