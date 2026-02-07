@@ -5,7 +5,7 @@
 **Focus**: github-app-auth
 **Created**: 2026-02-08 10:30
 **Branch**: `task/412b79-gh-auth-page`
-**Status**: detailed
+**Status**: in_progress
 **Detailed**: 2026-02-08 14:00
 
 ## Dependencies
