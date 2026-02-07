@@ -29,7 +29,7 @@ npm-debug.log*
 *.sw?
 
 # Claude + agents
+.claude/settings.local.json
 
-.claude
-.planning/debug
-.agents
+# Barae workflow (ephemeral session state)
+.project/CHECKPOINT.md
