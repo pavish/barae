@@ -3,7 +3,7 @@
 Created: 2026-02-07 12:00
 Status: active
 Branch: focus/github-app-auth
-PR: <!-- to be filled after creation -->
+PR: https://github.com/pavish/barae/pull/3
 
 ## Research
 See `.project/CURRENT_RESEARCH.md` for detailed research findings (GitHub App OAuth flow, better-auth integration, token management, error scenarios, existing code patterns, etc.).
