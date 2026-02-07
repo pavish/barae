@@ -5,8 +5,9 @@
 **Focus**: github-app-auth
 **Created**: 2026-02-08 10:30
 **Branch**: `task/184b60-gh-availability-endpoint`
-**Status**: in_progress
+**Status**: pr_raised
 **Detailed**: 2026-02-08 12:00
+**PR**: https://github.com/pavish/barae/pull/6
 
 ## Dependencies
 
