@@ -5,7 +5,7 @@
 **Focus**: github-app-auth
 **Created**: 2026-02-08 10:30
 **Branch**: `task/184b60-gh-availability-endpoint`
-**Status**: detailed
+**Status**: in_progress
 **Detailed**: 2026-02-08 12:00
 
 ## Dependencies
