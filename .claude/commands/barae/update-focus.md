@@ -26,7 +26,7 @@ Update `.project/CURRENT_FOCUS.md` based on user's input. Common changes:
 - **Scope boundaries**: Adjust in-scope / NOT in-scope lists
 - **Pitfalls**: Add newly discovered pitfalls
 - **Constraints**: Add or relax constraints based on learnings
-- **Task list**: (task entries are managed by `/barae:new-task` and `/barae:cancel-task`, not here)
+- **Task list**: (task entries are managed by `/barae:plan-tasks`, `/barae:new-task`, and `/barae:cancel-task`, not here)
 
 **Do NOT change:**
 - The focus name or branch name (these are immutable identifiers)
@@ -44,10 +44,13 @@ git commit -m "focus(<focus-name>): update focus scope"
 git push origin focus/<focus-name>
 ```
 
-Update the focus draft PR body if it exists:
-```bash
+**Update focus PR description** — delegate to a Bash subagent to save context window:
+```
+Find the focus PR number and update its body with the latest CURRENT_FOCUS.md:
+gh pr list --head focus/<focus-name> --state open --json number -q '.[0].number'
 gh pr edit <number> --body "$(cat .project/CURRENT_FOCUS.md)"
 ```
+Run with `dangerouslyDisableSandbox: true` (gh needs keyring access).
 
 ## Step 5: Impact Assessment
 
@@ -55,6 +58,13 @@ After updating the focus, check if any existing tasks are affected:
 - Read each TASK.md in `.project/tasks/`
 - If a task's scope no longer aligns with the updated focus, flag it to the user
 - Suggest cancelling or creating replacement tasks as needed
+
+## Step 6: Checkpoint
+
+Save a checkpoint after focus update:
+- What changed in the focus
+- Any tasks affected
+- Current state
 
 ## Rules
 - Focus describes WHAT, not HOW — no implementation details

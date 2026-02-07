@@ -10,15 +10,16 @@ Show a concise project overview without loading full context. Includes task list
 
 2. **List tasks** (lightweight — don't read full TASK.md):
    - List folders in `.project/tasks/`
-   - For each, read only the first 8 lines of TASK.md (title, ID, type, focus, created, branch)
+   - For each, read only the first 8 lines of TASK.md (title, ID, type, focus, created, branch, status)
    - Check which task branches exist locally:
      ```bash
      git branch --list 'task/*' --format='%(refname:short)'
      ```
-   - Check which task PRs exist:
+   - Check which task PRs exist and their state:
      ```bash
      gh pr list --search "head:task/" --json number,headRefName,state --limit 50
      ```
+   - **Auto-detect completion**: If a task PR is merged but TASK.md status is not `completed`, note it as completed in the display.
 
 3. **Git state**:
    ```bash
@@ -40,9 +41,10 @@ Show a concise project overview without loading full context. Includes task list
    **Uncommitted:** <count> files
 
    ### Tasks
-   ✓ <task-id> — <title> [PR #<num>]
-   ⧗ <task-id> — <title> [branch exists]
-   ☐ <task-id> — <title>
+   ✓ <task-id> — <title> [PR #<num> merged]
+   ⧖ <task-id> — <title> [PR #<num> open]
+   ⧗ <task-id> — <title> [branch exists, no PR]
+   ☐ <task-id> — <title> [planned]
 
    ### Recent Commits
    - <SHA> <message>
@@ -53,14 +55,15 @@ Show a concise project overview without loading full context. Includes task list
    ```
 
    Status indicators:
-   - ✓ = PR exists (merged or open)
-   - ⧗ = branch exists, no PR yet
-   - ☐ = not started
+   - `✓` = completed (PR merged)
+   - `⧖` = in progress, PR open
+   - `⧗` = branch exists, no PR (detailed or in_progress without PR)
+   - `☐` = planned (not started)
 
 6. **Suggest next action** based on state:
    - No focus → "Create one with `/barae:new-focus`"
-   - Focus but no tasks → "Create tasks with `/barae:new-task`"
-   - Pending tasks → "Work on a task with `/barae:work-task <id>`"
+   - Focus but no tasks → "Create tasks with `/barae:plan-tasks` or `/barae:new-task`"
+   - Planned/detailed tasks → "Start a task with `/barae:start-task <id>`"
    - All tasks done → "Consider archiving with `/barae:archive-focus`"
 
 ## Rules

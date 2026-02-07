@@ -48,8 +48,9 @@ Load the last checkpoint and help user continue from where they left off.
    ```
 
 5. **Suggest next action**:
-   - If active task exists: "Continue with `/barae:work-task <task-id>`?"
-   - If no active task but pending tasks: "Pick a task — see list above"
+   - If active task with status `in_progress`: "Continue with `/barae:start-task <task-id>`?"
+   - If active task with status `detailed`: "Start implementation with `/barae:start-task <task-id>`?"
+   - If no active task but planned/detailed tasks: "Pick a task — see list above"
    - If blockers noted: "Let's address the blockers first"
    - If focus is done: "All tasks complete — archive with `/barae:archive-focus`?"
 
