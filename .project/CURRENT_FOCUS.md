@@ -124,7 +124,7 @@ This uses GitHub Apps (rather than basic OAuth Apps) because Barae will use GitH
 ## Tasks
 
 - [x] `22eb84-gh-backend-provider` — Add GitHub social provider to better-auth backend configuration
-- [ ] `184b60-gh-availability-endpoint` — Add backend endpoint to expose GitHub auth availability
+- [x] `184b60-gh-availability-endpoint` — Add backend endpoint to expose GitHub auth availability
 - [ ] `412b79-gh-auth-page` — Enable "Continue with GitHub" buttons on login and signup forms
 - [ ] `f9a333-gh-settings-link` — Add GitHub account link and unlink functionality to settings page
 - [ ] `04bc80-gh-setup-guide` — Write GitHub App creation guide for docs/
