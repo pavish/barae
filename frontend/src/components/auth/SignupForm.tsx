@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Github } from 'lucide-react'
 import { authClient } from '@/lib/auth'
 import { signupSchema, type SignupFormData } from '@/lib/schemas/auth'
 import { useAuthStore } from '@/stores/authStore'
@@ -9,10 +8,15 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 import { Separator } from '@/components/ui/separator'
-import { Badge } from '@/components/ui/badge'
 import { AuthErrorBanner } from '@/components/auth/AuthErrorBanner'
+import { GitHubSignInButton } from '@/components/auth/GitHubSignInButton'
 
-export function SignupForm() {
+interface SignupFormProps {
+  githubAvailable: boolean
+  isLoadingProviders: boolean
+}
+
+export function SignupForm({ githubAvailable, isLoadingProviders }: SignupFormProps) {
   const setViewWithEmail = useAuthStore((s) => s.setViewWithEmail)
   const setOtpAutoSent = useAuthStore((s) => s.setOtpAutoSent)
   const [formError, setFormError] = useState<string | null>(null)
@@ -123,18 +127,11 @@ export function SignupForm() {
         </span>
       </div>
 
-      <Button
-        type="button"
-        variant="outline"
-        className="w-full"
-        disabled
-      >
-        <Github />
-        Continue with GitHub
-        <Badge variant="secondary" className="ml-1 text-[10px]">
-          Coming soon
-        </Badge>
-      </Button>
+      <GitHubSignInButton
+        githubAvailable={githubAvailable}
+        isLoadingProviders={isLoadingProviders}
+        onError={setFormError}
+      />
     </form>
   )
 }

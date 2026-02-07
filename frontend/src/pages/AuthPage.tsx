@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import { Info } from 'lucide-react'
 import { useAuthStore, type AuthView } from '@/stores/authStore'
+import { useProviders } from '@/hooks/useProviders'
+import { getOAuthErrorMessage } from '@/lib/oauthErrors'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { AuthErrorBanner } from '@/components/auth/AuthErrorBanner'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { SignupForm } from '@/components/auth/SignupForm'
 import { OtpVerification } from '@/components/auth/OtpVerification'
@@ -14,7 +17,13 @@ import { ResetPasswordForm } from '@/components/auth/ResetPasswordForm'
 export function AuthPage() {
   const { view, email, setView } = useAuthStore()
   const location = useLocation()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [showExpired, setShowExpired] = useState(false)
+  const [oauthError, setOauthError] = useState<string | null>(() => {
+    const errorCode = searchParams.get('error')
+    return errorCode ? getOAuthErrorMessage(errorCode) : null
+  })
+  const { githubAvailable, isLoading: isLoadingProviders } = useProviders()
 
   useEffect(() => {
     const state = location.state as { expired?: boolean } | null
@@ -25,11 +34,18 @@ export function AuthPage() {
     }
   }, [location.state, setView])
 
+  useEffect(() => {
+    if (searchParams.get('error')) {
+      setSearchParams({}, { replace: true })
+    }
+  }, [searchParams, setSearchParams])
+
   const activeTab = view === 'signup' ? 'signup' : 'login'
 
   function handleTabChange(value: string) {
     if (value === 'login' || value === 'signup') {
       setShowExpired(false)
+      setOauthError(null)
       setView(value)
     }
   }
@@ -62,7 +78,8 @@ export function AuthPage() {
               </AlertDescription>
             </Alert>
           )}
-          {renderView(view, email, activeTab, handleTabChange, setView)}
+          <AuthErrorBanner message={oauthError} />
+          {renderView(view, email, activeTab, handleTabChange, setView, githubAvailable, isLoadingProviders)}
         </div>
       </div>
     </div>
@@ -75,6 +92,8 @@ function renderView(
   activeTab: string,
   onTabChange: (value: string) => void,
   setView: (view: AuthView) => void,
+  githubAvailable: boolean,
+  isLoadingProviders: boolean,
 ) {
   switch (view) {
     case 'login':
@@ -98,10 +117,16 @@ function renderView(
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="login" className="mt-4">
-                <LoginForm />
+                <LoginForm
+                  githubAvailable={githubAvailable}
+                  isLoadingProviders={isLoadingProviders}
+                />
               </TabsContent>
               <TabsContent value="signup" className="mt-4">
-                <SignupForm />
+                <SignupForm
+                  githubAvailable={githubAvailable}
+                  isLoadingProviders={isLoadingProviders}
+                />
               </TabsContent>
             </Tabs>
           </CardContent>
