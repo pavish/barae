@@ -19,7 +19,10 @@ export function AuthPage() {
   const location = useLocation()
   const [searchParams, setSearchParams] = useSearchParams()
   const [showExpired, setShowExpired] = useState(false)
-  const [oauthError, setOauthError] = useState<string | null>(null)
+  const [oauthError, setOauthError] = useState<string | null>(() => {
+    const errorCode = searchParams.get('error')
+    return errorCode ? getOAuthErrorMessage(errorCode) : null
+  })
   const { githubAvailable, isLoading: isLoadingProviders } = useProviders()
 
   useEffect(() => {
@@ -32,9 +35,7 @@ export function AuthPage() {
   }, [location.state, setView])
 
   useEffect(() => {
-    const errorCode = searchParams.get('error')
-    if (errorCode) {
-      setOauthError(getOAuthErrorMessage(errorCode))
+    if (searchParams.get('error')) {
       setSearchParams({}, { replace: true })
     }
   }, [searchParams, setSearchParams])
