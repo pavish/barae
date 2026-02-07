@@ -26,7 +26,7 @@ Update `.project/CURRENT_FOCUS.md` based on user's input. Common changes:
 - **Scope boundaries**: Adjust in-scope / NOT in-scope lists
 - **Pitfalls**: Add newly discovered pitfalls
 - **Constraints**: Add or relax constraints based on learnings
-- **Task list**: (task entries are managed by `/barae:new-task` and `/barae:cancel-task`, not here)
+- **Task list**: (task entries are managed by `/barae:plan-tasks`, `/barae:new-task`, and `/barae:cancel-task`, not here)
 
 **Do NOT change:**
 - The focus name or branch name (these are immutable identifiers)

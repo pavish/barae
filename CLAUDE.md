@@ -66,8 +66,9 @@ Wait for user instruction. Do not proactively read files.
 ### Workflow
 - `/barae:new-focus` — Create new focus area with deep research
 - `/barae:update-focus` — Update current focus scope (non-implementation changes only)
-- `/barae:new-task` — Plan and create a new task
-- `/barae:work-task <task-id>` — Implement a task (team leader pattern)
+- `/barae:plan-tasks` — Auto-generate tasks from focus and research
+- `/barae:new-task` — Manually add a single task
+- `/barae:start-task <task-id>` — Plan details and implement a task
 - `/barae:parallel-tasks` — Execute multiple tasks in parallel (git worktrees)
 - `/barae:cancel-task` — Cancel a task's work or remove the task entirely
 - `/barae:cancel-focus` — Cancel current focus, archive as cancelled
@@ -117,16 +118,17 @@ Claude acts as a **team leader**, not a solo implementer:
 | Subagent | Model | Use For |
 |----------|-------|---------|
 | `barae-researcher` | Opus | Deep research for new focuses and tasks. Has persistent memory. |
-| `barae-implementer` | Opus (default) / Sonnet (simple <50 lines) | Executing implementation steps during `/barae:work-task`. |
+| `barae-implementer` | Opus (default) / Sonnet (simple <50 lines) | Executing implementation steps during `/barae:start-task`. |
 | `barae-reviewer` | Opus | Code reviews, verification, standards checks. |
 
 Use Sonnet for `barae-implementer` only when the step is simple and under 50 lines. Opus for everything else.
 Opus always reviews — never use a less capable model to review a more capable model's work.
 
-### When given a task to work on (or `/barae:work-task`)
-1. Read CURRENT_FOCUS.md + the task's TASK.md + relevant standards (see Standards Mapping)
+### When given a task to work on (or `/barae:start-task`)
+0. If TASK.md status is `planned`, run detailed planning phase first: ask user questions about the task, delegate to `barae-researcher` for codebase exploration and step planning, present proposed Implementation Steps / Verification Steps / Test Cases, incorporate user feedback, then proceed to implementation.
+1. Read CURRENT_FOCUS.md + the task's TASK.md + relevant standards (see Standards Mapping). Load CURRENT_RESEARCH.md only when deeper context is needed (e.g., understanding API flows, error scenarios, existing code patterns).
 2. **Check checkpoint**: if CHECKPOINT.md references this task, read it and skip to the recorded step
-3. Sync branches: fetch origin, pull focus branch, merge focus into task branch (or create task branch)
+3. Sync branches: fetch origin, pull focus branch, merge focus into task branch (or create task branch). Commit the detailed plan + status change as first commit.
 4. Explore existing code patterns in the affected area (skip if resuming from checkpoint)
 5. Clarify anything unclear with the user (see "When to Ask")
 6. For each implementation step:
@@ -177,13 +179,22 @@ Opus always reviews — never use a less capable model to review a more capable 
 ### Task ID Format
 `<6-char-lowercase-alphanum>-<short-kebab-desc>` (e.g., `k7m2p9-otp-resend`)
 
+### Task Status Values
+
+`planned` → `in_progress` → `completed` (and `cancelled` at any point)
+
+- **planned**: Lightweight stub exists (title, description, acceptance criteria, dependencies). Created by `/barae:plan-tasks` or `/barae:new-task`.
+- **in_progress**: Full details filled in (implementation steps, verification, test cases), implementation underway. Transitioned by `/barae:start-task`.
+- **completed**: Implementation done, PR created.
+- **cancelled**: Task abandoned.
+
 ### Task Immutability
 
-Task **scope** (Description + Acceptance Criteria) is immutable after planning is complete.
+Task **scope** (Description + Acceptance Criteria) is immutable after creation.
 
-This works because tasks are deliberately kept small and thoroughly planned:
-- All scope questions are resolved during the planning phase (`/barae:new-task`)
-- Edge cases and requirements are mapped through research before implementation starts
+This works because tasks are deliberately kept small:
+- Scope is defined during task creation (`/barae:plan-tasks` or `/barae:new-task`)
+- Detailed implementation planning happens at start time (`/barae:start-task`), when the codebase state is current
 - If scope needs to change, it means the planning missed something — create a new task with just the new changes after the current one completes
 
 **Implementation Steps** may be amended during execution with a note explaining the change.
@@ -192,10 +203,10 @@ Tasks can be marked `cancelled` in their Status field if they become irrelevant.
 ### Task Dependencies
 
 Tasks may depend on each other. Dependencies are:
-- **Identified during task creation** (`/barae:new-task`) — the researcher checks existing tasks for dependencies
+- **Identified during task creation** (`/barae:plan-tasks` or `/barae:new-task`) — dependencies are checked when tasks are created
 - **Noted in TASK.md** — a `## Dependencies` section lists task IDs that must complete first
 - **Updated after task completion** — when a task completes, check if it unblocks other tasks and note this to the user
-- **Enforced before starting** — `/barae:work-task` checks if blocking tasks are still pending
+- **Enforced before starting** — `/barae:start-task` checks if blocking tasks are still `planned` or `in_progress`
 
 Tasks with no dependencies can be run in parallel via `/barae:parallel-tasks`.
 

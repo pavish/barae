@@ -11,6 +11,7 @@ Coordinate parallel task execution using git worktrees for full isolation.
 ## Step 1: Validate Task Independence
 
 For each selected task, read its TASK.md. Check:
+- **Status**: Each task must have status `in_progress` with Implementation Steps already filled in. If any task has status `planned`, tell user to run `/barae:start-task <task-id>` first to complete the planning phase.
 - **Dependencies**: Does any task have a `## Dependencies` section listing another selected task? If yes, those must run sequentially — remove from the parallel set and tell the user.
 - **File overlap**: Do any tasks modify the same files? If yes, WARN user and suggest sequential execution for those.
 - **Size**: Each task should be within normal sizing guidelines (~400 lines, 5-10 commits).

@@ -26,7 +26,7 @@ Gather and display the current state:
 Present two options:
 
 **Option A: Cancel work only (keep task for later)**
-> Closes PR, deletes branch, resets task to pending. The task plan stays — you can pick it up again later.
+> Closes PR, deletes branch, resets task to planned. The task plan stays — you can pick it up again later.
 
 **Option B: Cancel task entirely (delete everything)**
 > Closes PR, deletes branch, removes the task folder and its entry from CURRENT_FOCUS.md. The task is gone.
@@ -57,8 +57,8 @@ Wait for user to choose before proceeding.
    ```
    If the remote branch doesn't exist, skip.
 
-4. **Reset TASK.md status** to `pending`:
-   - Update the `**Status**:` line to `pending`
+4. **Reset TASK.md status** to `planned`:
+   - Update the `**Status**:` line to `planned`
 
 5. **Update CURRENT_FOCUS.md** task list entry back to unchecked:
    - Change `- [x]` to `- [ ]` for the task's entry (if it was checked)

@@ -59,8 +59,8 @@ Show a concise project overview without loading full context. Includes task list
 
 6. **Suggest next action** based on state:
    - No focus → "Create one with `/barae:new-focus`"
-   - Focus but no tasks → "Create tasks with `/barae:new-task`"
-   - Pending tasks → "Work on a task with `/barae:work-task <id>`"
+   - Focus but no tasks → "Create tasks with `/barae:plan-tasks` or `/barae:new-task`"
+   - Planned tasks → "Start a task with `/barae:start-task <id>`"
    - All tasks done → "Consider archiving with `/barae:archive-focus`"
 
 ## Rules

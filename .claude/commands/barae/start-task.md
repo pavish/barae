@@ -1,13 +1,17 @@
-# /barae:work-task — Execute a Planned Task
+# /barae:start-task — Plan and Implement a Task
 
-You are executing a planned task using the team leader pattern. Task ID: $ARGUMENTS
+You are planning the details of a task and then implementing it. Task ID: $ARGUMENTS
 
 If no task ID provided:
 1. List folders in `.project/tasks/`
-2. For each, read first 8 lines of TASK.md to show ID, title, type
-3. Ask user which task to work on
+2. For each, read first 8 lines of TASK.md to show ID, title, status
+3. Ask user which task to start
 
-## Step 1: Load Context
+---
+
+## Phase 1: Interactive Planning
+
+### Step 1: Load Context
 
 1. Read `.project/CURRENT_FOCUS.md`
 2. Read `.project/tasks/$ARGUMENTS/TASK.md`
@@ -18,25 +22,84 @@ If no task ID provided:
    - Database/migration task → `backend.md` + `migrations.md` + `typescript.md`
    - Docker/infra task → `docker.md`
    - If adding new dependencies → additionally load `dependencies.md`
+4. Load `.project/CURRENT_RESEARCH.md` only when deeper context is needed (e.g., understanding API flows, error scenarios, existing code patterns)
 
-## Step 2: Check for Resume
+### Step 2: Check for Resume
 
 If `.project/CHECKPOINT.md` exists and references this task:
 1. Read CHECKPOINT.md
-2. Note which implementation step was last completed
-3. Skip Steps 3-4 below (branches already synced, code already explored)
-4. Resume from the next implementation step in Step 5
+2. If the checkpoint shows planning is complete (status `in_progress` with Implementation Steps already in TASK.md), skip to **Phase 2, Step 9**
+3. If the checkpoint shows implementation is underway, skip to the recorded step in Phase 2
+4. If no checkpoint or checkpoint references a different task, continue normally
 
-If no checkpoint or checkpoint references a different task, continue normally.
-
-## Step 3: Check Dependencies
+### Step 3: Check Dependencies
 
 If TASK.md has a `## Dependencies` section listing other task IDs:
 1. Check each dependency task's status (read their TASK.md)
-2. If any blocking task is still pending or in-progress, tell user and stop
-3. If all dependencies are complete, proceed
+2. If any blocking task is still `planned` or `in_progress`, tell user and stop
+3. If all dependencies are `completed`, proceed
 
-## Step 4: Sync Branches
+### Step 4: Check Task Status
+
+- `planned` → proceed with planning (Phase 1)
+- `in_progress` with Implementation Steps → skip to Phase 2, Step 9 (implementation)
+- `completed` → inform user the task is already done
+- `cancelled` → inform user the task was cancelled, ask if they want to reopen it
+
+### Step 5: Ask User Questions
+
+Before researching, ask the user about this task:
+- Any priorities or concerns for this task?
+- Specific areas they want to focus on or avoid?
+- Any constraints not captured in the acceptance criteria?
+- Anything they've learned since the task was created?
+
+Always ask: **"Is there anything else you want me to know before I research this?"**
+
+Wait for user's answers before proceeding.
+
+### Step 6: Research and Plan (delegate to `barae-researcher` subagent — Opus)
+
+Delegate to the `barae-researcher` subagent with:
+- The user's answers from Step 5
+- CURRENT_FOCUS.md context
+- The lightweight TASK.md content (Description + Acceptance Criteria)
+- Instruction to read `.project/PRODUCT.md` for product context
+- Instruction to explore existing codebase in the affected area
+- Instruction to read relevant standards from `.project/codebase/` (per Standards Mapping in CLAUDE.md)
+
+The subagent will:
+- Check its persistent memory for existing knowledge about this area
+- Explore the codebase to find patterns, existing code to build on
+- Plan specific implementation steps (with file paths and what changes)
+- Define verification steps and test cases
+- Update its memory with new findings
+
+**Do NOT modify the Description or Acceptance Criteria** — scope is immutable after creation.
+
+### Step 7: Present the Plan
+
+Show the user the proposed additions to TASK.md:
+- **Implementation Steps** — numbered, with specific file paths and what changes
+- **Verification Steps** — how to verify the implementation
+- **Test Cases** — input → expected output
+
+Ask: **"Does this plan look right? Anything to add, remove, or change?"**
+
+### Step 8: Incorporate Feedback
+
+If the user requests changes:
+1. Adjust the Implementation Steps, Verification Steps, or Test Cases as requested
+2. Re-present the updated plan
+3. Loop until user approves
+
+Once approved, proceed to Phase 2.
+
+---
+
+## Phase 2: Implementation
+
+### Step 9: Sync Branches and Commit Plan
 
 ```bash
 git fetch origin
@@ -54,18 +117,31 @@ If the task branch does not exist:
 git checkout -b task/$ARGUMENTS
 ```
 
-## Step 5: Explore
+Update TASK.md with the full details:
+- Add `**Detailed**: <YYYY-MM-DD HH:MM>` metadata line
+- Change `**Status**` to `in_progress`
+- Add `## Implementation Steps` section
+- Add `## Verification Steps` section
+- Add `## Test Cases` section
+
+Commit the plan:
+```bash
+git add .project/tasks/$ARGUMENTS/TASK.md
+git commit -m "plan($ARGUMENTS): add implementation details"
+```
+
+### Step 10: Explore
 
 Before writing any code, explore existing code in the affected area:
 - Find existing patterns to follow
 - Understand the current state of files that will be modified
 - Identify potential conflicts or dependencies
 
-## Step 6: Clarify
+### Step 11: Clarify
 
-Review TASK.md implementation steps. For anything unclear, ask the user (see "When to Ask" in CLAUDE.md). Never guess user intention.
+Review implementation steps. For anything unclear, ask the user (see "When to Ask" in CLAUDE.md). Never guess user intention.
 
-## Step 7: Implement (Team Leader Pattern)
+### Step 12: Implement (Team Leader Pattern)
 
 For each implementation step in TASK.md:
 
@@ -103,14 +179,14 @@ For each implementation step in TASK.md:
 
 Repeat for each step. If a step reveals something unexpected, report to user before proceeding.
 
-## Step 8: Full Review
+### Step 13: Full Review
 
 After all steps are complete:
 - Review ALL changes together (not just individual steps): `git diff focus/<focus-name>...HEAD`
 - Check cross-file consistency
 - Verify all acceptance criteria from TASK.md are met
 
-## Step 9: Per-Task Verification
+### Step 14: Per-Task Verification
 
 Delegate verification to the `barae-reviewer` subagent (Opus):
 - TypeScript type-check (backend and frontend)
@@ -127,7 +203,7 @@ If verification fails:
 - Re-run verification
 - Max 5 fix loops — if still failing, stop and ask user
 
-## Step 10: Present to User
+### Step 15: Present to User
 
 Summarize:
 - What was built/changed
@@ -139,14 +215,16 @@ Summarize:
 
 Wait for user approval.
 
-## Step 11: Ship (after user approval)
+### Step 16: Ship (after user approval)
 
 ```bash
 git push -u origin task/$ARGUMENTS
 gh pr create --base focus/<focus-name> --title "<task title>" --body "$(cat .project/tasks/$ARGUMENTS/TASK.md)"
 ```
 
-Commits were already made during Step 7. This step only pushes and creates the PR.
+Commits were already made during Step 12. This step only pushes and creates the PR.
+
+---
 
 ## Git Error Recovery
 
@@ -165,5 +243,7 @@ Do NOT proceed with subsequent steps until the error is resolved.
 - Never force-push
 - If blocked, ask user — don't try to work around it
 - Deviation rules from CLAUDE.md apply (small bug fix OK, large changes need new task)
-- Commits happen during implementation (Step 7), not batched at the end
+- Commits happen during implementation (Step 12), not batched at the end
 - Use merge (not rebase) for syncing with the focus branch
+- Task **scope** (Description + Acceptance Criteria) is immutable — do NOT modify them during planning or implementation
+- **Implementation Steps** may be amended during execution with a note explaining the change

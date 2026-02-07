@@ -65,7 +65,7 @@ PR: <to be filled after creation>
 - ALWAYS <constraint>
 
 ## Tasks
-<!-- Tasks added here via /barae:new-task -->
+<!-- Tasks added here via /barae:plan-tasks or /barae:new-task -->
 <!-- Format: - [ ] `<task-id>` — <brief description> -->
 ```
 
@@ -114,5 +114,5 @@ Never amend. Never force-push.
 ## Rules
 - Focus names are kebab-case (e.g., `github-app-integration`)
 - CURRENT_FOCUS.md describes WHAT we're building, not HOW
-- Tasks are NOT created here — use `/barae:new-task` separately
+- Tasks are NOT created here — use `/barae:plan-tasks` or `/barae:new-task` separately
 - Never force-push
