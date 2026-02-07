@@ -47,6 +47,7 @@ Claude cannot reliably self-assess numeric confidence. Instead, use these verifi
 
 - `.project/PRODUCT.md` — Product bible (what, who, why, features, decisions)
 - `.project/CURRENT_FOCUS.md` — Current work scope (product-level spec)
+- `.project/CURRENT_RESEARCH.md` — Research findings for the current focus (load on-demand when a task needs deeper context)
 - `.project/tasks/` — Active tasks with full planning
 - `.project/archive/` — Completed focuses and tasks
 - `.project/codebase/` — Detailed standards docs (loaded per task type, see Standards section)
@@ -124,7 +125,7 @@ Use Sonnet for `barae-implementer` only when the step is simple and under 50 lin
 Opus always reviews — never use a less capable model to review a more capable model's work.
 
 ### When given a task to work on (or `/barae:work-task`)
-1. Read CURRENT_FOCUS.md + the task's TASK.md + relevant standards (see Standards Mapping)
+1. Read CURRENT_FOCUS.md + the task's TASK.md + relevant standards (see Standards Mapping). Load CURRENT_RESEARCH.md only when deeper context is needed (e.g., understanding API flows, error scenarios, existing code patterns).
 2. **Check checkpoint**: if CHECKPOINT.md references this task, read it and skip to the recorded step
 3. Sync branches: fetch origin, pull focus branch, merge focus into task branch (or create task branch)
 4. Explore existing code patterns in the affected area (skip if resuming from checkpoint)
