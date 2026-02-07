@@ -4,7 +4,7 @@ You are creating a new CURRENT_FOCUS through deep research and analysis. This is
 
 ## Pre-Flight
 
-1. Check `gh auth status` — if not authenticated, stop and guide user to run `gh auth login`
+1. Check `gh auth status` — run with `dangerouslyDisableSandbox: true` (the `gh` CLI needs macOS keyring access which the sandbox blocks). If not authenticated, guide user to run `gh auth login`.
 2. If `.project/CURRENT_FOCUS.md` exists, ask user if they want to archive it first (run archive-focus flow)
 
 ## Step 1: Gather Requirements
@@ -107,7 +107,7 @@ Never amend. Never force-push.
 ## Git Error Recovery
 
 - **Branch already exists**: Ask user — switch to existing branch, or use a different name?
-- **`gh auth status` fails**: Guide user to run `gh auth login`, then re-run this command
+- **`gh auth status` fails**: First retry with `dangerouslyDisableSandbox: true` (keyring access). If it still fails, guide user to run `gh auth login`, then re-run this command
 - **`gh pr create` fails**: Show error, check if PR already exists (`gh pr list --head focus/<name>`), suggest retry
 - **Network failure**: Suggest retrying or checking connection
 

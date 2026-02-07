@@ -164,7 +164,7 @@ Opus always reviews — never use a less capable model to review a more capable 
 - Verification fails → fix loop (max 5 attempts), then ask user
 - Subagent spirals → stop subagent (indicators: 3+ attempts at same file, out-of-scope modifications, unplanned abstractions), report findings, ask user
 - Mid-task blocker → ask user, don't work around it
-- Network/auth failure → guide user to fix (e.g., `gh auth login`), then retry
+- Network/auth failure → first retry with `dangerouslyDisableSandbox: true` (sandbox blocks keyring access needed by `gh` and git remote commands). If still failing, guide user to fix (e.g., `gh auth login`), then retry
 
 ## Task Rules
 
@@ -218,6 +218,7 @@ main (default branch)
 - Focus draft PR includes CURRENT_FOCUS.md content
 - When focus is complete: user merges the focus draft PR into main on GitHub
 - `gh` CLI required — if not authenticated, guide user to run `gh auth login`
+- **Sandbox note**: The `gh` CLI accesses the macOS system keyring for auth tokens, which is blocked by Claude Code's default sandbox. All `gh` commands (and `git push`/`git fetch`/`git pull` over HTTPS) must run with `dangerouslyDisableSandbox: true`. If a `gh` or git remote command fails with a keyring or auth error, retry with sandbox disabled before asking the user to re-authenticate.
 - **Never force-push. Never amend published commits.**
 - **Never push directly to main** — always ask user for explicit approval before any push to main
 

@@ -153,7 +153,7 @@ Commits were already made during Step 7. This step only pushes and creates the P
 If any git command fails:
 - **Branch already exists**: Ask user — switch to it, or use a different name?
 - **Merge conflict**: Show conflicted files, ask user to resolve. After resolution, continue from where you left off.
-- **Authentication failure**: Guide user to run `gh auth login`, then retry
+- **Authentication failure**: First retry with `dangerouslyDisableSandbox: true` (the `gh` CLI and git remote commands need macOS keyring access which the sandbox blocks). If it still fails, guide user to run `gh auth login`, then retry
 - **Push rejected**: `git pull origin task/$ARGUMENTS` then merge, then retry push
 - **Network failure**: Suggest retrying or checking connection
 
