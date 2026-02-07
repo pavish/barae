@@ -31,7 +31,7 @@ When a concrete task emerges from discussion:
 2. Explain how it fits into the current focus
 3. Estimate rough size (is it within the ~400 line, 5-10 commit limit?)
 4. If too large, suggest how to split it
-5. Do NOT create the task folder — wait for user to approve, then suggest `/barae:new-task`
+5. Do NOT create the task folder — wait for user to approve, then suggest `/barae:plan-tasks` or `/barae:new-task`
 
 ## Rules
 - This is a discussion mode — no code changes, no file creation

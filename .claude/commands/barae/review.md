@@ -2,12 +2,17 @@
 
 You are reviewing code for quality and standards compliance. Target: $ARGUMENTS
 
-The argument can be a PR number, task ID, or branch name.
-
 ## Step 1: Determine Target
 
-If `$ARGUMENTS` is provided, confirm the target briefly with the user.
-If not provided, ask the user what to review (PR number, task ID, or branch name).
+The argument can be:
+- **A task ID** → review that task's changes against the focus branch
+- **`focus`** or a focus name → review the focus branch against main
+- **No argument** → auto-detect from current branch:
+  - On a `task/*` branch → review that task
+  - On a `focus/*` branch → review the focus
+  - Otherwise → ask the user what to review
+
+If not provided, auto-detect. If auto-detection fails, ask the user: "What should I review? Provide a task ID or say 'focus'."
 
 Optionally ask:
 - Any specific concerns or focus areas?
@@ -15,19 +20,14 @@ Optionally ask:
 
 ## Step 2: Get the Diff
 
-### For a PR number:
-```bash
-gh pr diff <number>
-```
-
 ### For a task ID:
 ```bash
 git diff focus/<focus-name>...task/<task-id>
 ```
 
-### For a branch:
+### For focus:
 ```bash
-git diff main...<branch>
+git diff main...focus/<focus-name>
 ```
 
 ## Step 3: Review (delegate to `barae-reviewer` subagent — Opus)

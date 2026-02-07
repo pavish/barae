@@ -2,7 +2,21 @@
 
 You are saving the current session state for handoff to the next session. Just do it — no questions needed.
 
-This command creates a full manual checkpoint. Note that auto-checkpoints also happen after every commit during `/barae:work-task`.
+This command creates a full manual checkpoint. Note that auto-checkpoints also happen after every commit during `/barae:start-task`.
+
+## Which Commands Should Checkpoint
+
+All commands that complete significant work should save a checkpoint before finishing:
+- `/barae:new-focus` — after git setup completes
+- `/barae:plan-tasks` — after task creation
+- `/barae:new-task` — after task creation
+- `/barae:start-task` — auto-checkpoint after every commit, plus final checkpoint
+- `/barae:cancel-task` — after cancellation
+- `/barae:cancel-focus` — clear checkpoint (write minimal cancellation note)
+- `/barae:archive-focus` — clear checkpoint (write minimal archive note)
+- `/barae:update-focus` — after focus update
+
+Read-only commands do NOT checkpoint: `/barae:status`, `/barae:chat`, `/barae:resume`, `/barae:review`
 
 ## Steps
 
@@ -70,7 +84,7 @@ This command creates a full manual checkpoint. Note that auto-checkpoints also h
 
 5. **Report** to user what was saved
 
-## Auto-Checkpoint (during work-task)
+## Auto-Checkpoint (during start-task)
 
 When called automatically after a commit (not via `/barae:checkpoint`), write a lighter checkpoint:
 - Update only: Date, Branch, Active Task, Current Progress (step number), and Previous Checkpoints

@@ -26,7 +26,7 @@ Gather and display the current state:
 Present two options:
 
 **Option A: Cancel work only (keep task for later)**
-> Closes PR, deletes branch, resets task to pending. The task plan stays — you can pick it up again later.
+> Closes PR, deletes branch, resets task status. The task plan stays — you can pick it up again later.
 
 **Option B: Cancel task entirely (delete everything)**
 > Closes PR, deletes branch, removes the task folder and its entry from CURRENT_FOCUS.md. The task is gone.
@@ -41,34 +41,47 @@ Wait for user to choose before proceeding.
    ```
    If no PR exists or already closed, skip.
 
-2. **Delete task branch locally** (if it exists):
-   ```bash
-   git branch -D task/$ARGUMENTS
-   ```
-   If not on this branch. If currently on the task branch, switch to focus branch first:
+2. **Switch to focus branch** (if currently on the task branch):
    ```bash
    git checkout focus/<focus-name>
    ```
+
+3. **Delete task branch locally** (if it exists):
+   ```bash
+   git branch -d task/$ARGUMENTS
+   ```
+   If `-d` fails (unmerged changes), warn the user: "The task branch has unmerged changes. Force delete with `-D`?" Only use `-D` if user confirms.
    If the local branch doesn't exist, skip.
 
-3. **Delete task branch remotely** (if it exists):
+4. **Delete task branch remotely** (if it exists):
    ```bash
    git push origin --delete task/$ARGUMENTS
    ```
    If the remote branch doesn't exist, skip.
 
-4. **Reset TASK.md status** to `pending`:
-   - Update the `**Status**:` line to `pending`
+5. **Reset TASK.md status**:
+   - If TASK.md has Implementation Steps (i.e., detailed planning was done), set status to `detailed`
+   - If TASK.md has no Implementation Steps (only Description + Acceptance Criteria), set status to `planned`
 
-5. **Update CURRENT_FOCUS.md** task list entry back to unchecked:
+6. **Update CURRENT_FOCUS.md** task list entry back to unchecked:
    - Change `- [x]` to `- [ ]` for the task's entry (if it was checked)
 
-6. **Switch to focus branch**:
+7. **Commit and push on focus branch**:
    ```bash
-   git checkout focus/<focus-name>
+   git add .project/tasks/$ARGUMENTS/TASK.md .project/CURRENT_FOCUS.md
+   git commit -m "chore: cancel task $ARGUMENTS work"
+   git push origin focus/<focus-name>
    ```
 
-7. **Report** what was cleaned up (PR closed? Branch deleted? Status reset?)
+8. **Update focus PR description** — delegate to a Bash subagent to save context window:
+   ```
+   Find the focus PR number and update its body with the latest CURRENT_FOCUS.md:
+   gh pr list --head focus/<focus-name> --state open --json number -q '.[0].number'
+   gh pr edit <number> --body "$(cat .project/CURRENT_FOCUS.md)"
+   ```
+   Run with `dangerouslyDisableSandbox: true` (gh needs keyring access).
+
+9. **Report** what was cleaned up (PR closed? Branch deleted? Status reset?)
 
 ## Option B: Cancel Task Entirely
 
@@ -85,8 +98,9 @@ Wait for user to choose before proceeding.
 
 3. **Delete task branch locally** (if it exists):
    ```bash
-   git branch -D task/$ARGUMENTS
+   git branch -d task/$ARGUMENTS
    ```
+   If `-d` fails (unmerged changes), warn the user: "The task branch has unmerged changes. Force delete with `-D`?" Only use `-D` if user confirms.
    If the local branch doesn't exist, skip.
 
 4. **Delete task branch remotely** (if it exists):
@@ -101,21 +115,33 @@ Wait for user to choose before proceeding.
 6. **Remove task entry from CURRENT_FOCUS.md**:
    - Delete the line matching the task ID from the task list
 
-7. **Switch to focus branch** (if not already on it):
+7. **Commit and push on focus branch**:
    ```bash
-   git checkout focus/<focus-name>
+   git rm -r .project/tasks/$ARGUMENTS/
+   git add .project/CURRENT_FOCUS.md
+   git commit -m "chore: cancel task $ARGUMENTS entirely"
+   git push origin focus/<focus-name>
    ```
 
-8. **Report** what was deleted (PR closed? Branch deleted? Task folder removed? Focus updated?)
+8. **Update focus PR description** — delegate to a Bash subagent to save context window:
+   ```
+   Find the focus PR number and update its body with the latest CURRENT_FOCUS.md:
+   gh pr list --head focus/<focus-name> --state open --json number -q '.[0].number'
+   gh pr edit <number> --body "$(cat .project/CURRENT_FOCUS.md)"
+   ```
+   Run with `dangerouslyDisableSandbox: true` (gh needs keyring access).
+
+9. **Report** what was deleted (PR closed? Branch deleted? Task folder removed? Focus updated?)
+
+## Step 3: Checkpoint
+
+Save a checkpoint after cancellation:
+- What was cancelled and how (Option A or B)
+- Current state of focus and remaining tasks
 
 ## Rules
 - Always confirm the user's choice before doing anything destructive
 - Handle missing branches/PRs gracefully — skip with a note, don't error
 - Never force-push
 - If currently on the task branch being deleted, switch to focus branch first
-- Commit changes to TASK.md and CURRENT_FOCUS.md on the focus branch after cleanup:
-  ```bash
-  git add .project/tasks/$ARGUMENTS/TASK.md .project/CURRENT_FOCUS.md
-  git commit -m "chore: cancel task $ARGUMENTS"
-  ```
-  For Option B (full deletion), use `git rm` for the task folder instead
+- Use `git branch -d` first; only escalate to `-D` with user approval
