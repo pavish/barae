@@ -1,10 +1,32 @@
 import fp from 'fastify-plugin'
+import { Type } from '@sinclair/typebox'
 import { eq, and, gt } from 'drizzle-orm'
 
 const OTP_RATE_LIMIT_SECONDS = 60
 
 export default fp(
   async (fastify) => {
+    fastify.get(
+      '/v1/auth/providers',
+      {
+        schema: {
+          response: {
+            200: Type.Object({
+              github: Type.Boolean(),
+            }),
+          },
+        },
+      },
+      async () => {
+        const { config } = fastify
+        return {
+          github:
+            config.GITHUB_CLIENT_ID !== '' &&
+            config.GITHUB_CLIENT_SECRET !== '',
+        }
+      },
+    )
+
     fastify.route({
       method: ['GET', 'POST'],
       url: '/v1/auth/*',
