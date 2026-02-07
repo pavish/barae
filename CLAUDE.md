@@ -17,6 +17,8 @@ Refer `.project/PRODUCT.md` for full product context.
 7. Never assume — ask user when unclear. See "When to Ask" below.
 8. Never force-push — always make a new commit instead of amending + force-pushing.
 9. Never push directly to main — all changes to main require explicit user approval.
+   Exception: `archive-focus` and `cancel-focus` commit to main with explicit user approval (since the focus branch is being deleted/merged).
+10. One focus at a time — only one active focus is allowed. The previous focus must be merged (`archive-focus`) or cancelled (`cancel-focus`) before creating a new one.
 
 ## When to Ask (replacing confidence scoring)
 
@@ -47,6 +49,7 @@ Claude cannot reliably self-assess numeric confidence. Instead, use these verifi
 
 - `.project/PRODUCT.md` — Product bible (what, who, why, features, decisions)
 - `.project/CURRENT_FOCUS.md` — Current work scope (product-level spec)
+- `.project/CURRENT_RESEARCH.md` — Research findings for the current focus (created by `new-focus`, load on-demand when a task needs deeper context)
 - `.project/tasks/` — Active tasks with full planning
 - `.project/archive/` — Completed focuses and tasks
 - `.project/codebase/` — Detailed standards docs (loaded per task type, see Standards section)
@@ -69,12 +72,11 @@ Wait for user instruction. Do not proactively read files.
 - `/barae:plan-tasks` — Auto-generate tasks from focus and research
 - `/barae:new-task` — Manually add a single task
 - `/barae:start-task <task-id>` — Plan details and implement a task
-- `/barae:parallel-tasks` — Execute multiple tasks in parallel (git worktrees)
 - `/barae:cancel-task` — Cancel a task's work or remove the task entirely
 - `/barae:cancel-focus` — Cancel current focus, archive as cancelled
 
 ### Quality & Ops
-- `/barae:review <target>` — Code review for PR/task/branch
+- `/barae:review <target>` — Code review for task or focus
 - `/barae:checkpoint` — Save session state for handoff
 - `/barae:archive-focus` — Archive completed focus and tasks
 - `/barae:setup` — One-time project setup (idempotent)
@@ -93,25 +95,17 @@ Claude acts as a **team leader**, not a solo implementer:
 ### Delegation Strategy
 
 **Implement directly** (no subagent needed) when:
-- The change is under ~50 lines across all files
+- The change is under ~20 lines across all files
 - The change follows an existing pattern exactly
 - It is a single-step operation (fix a bug, add a field, update a config)
 
 **Delegate to `barae-implementer`** when:
-- The step involves 50+ lines of changes
+- The step involves 20+ lines of changes
 - The step requires exploring unfamiliar code areas
 - Multiple files need coordinated changes
 - The implementation is complex enough to benefit from focused attention
 
-**Use parallel tasks with worktrees** (via `/barae:parallel-tasks`) when:
-- 2-4 independent tasks need to run simultaneously
-- Changes span frontend, backend, and shared layers with no file overlap
-- Each task has independent file ownership
-
-**Never use parallel tasks for:**
-- Sequential tasks where each step depends on the previous
-- Tasks that modify the same files
-- Simple single-step operations
+Default to delegation for implementation steps unless truly trivial (<20 lines).
 
 ### Custom Subagents
 
@@ -125,23 +119,29 @@ Use Sonnet for `barae-implementer` only when the step is simple and under 50 lin
 Opus always reviews — never use a less capable model to review a more capable model's work.
 
 ### When given a task to work on (or `/barae:start-task`)
-0. If TASK.md status is `planned`, run detailed planning phase first: ask user questions about the task, delegate to `barae-researcher` for codebase exploration and step planning, present proposed Implementation Steps / Verification Steps / Test Cases, incorporate user feedback, then proceed to implementation.
+0. Check task status:
+   - `planned` → run full planning phase (Phase 1), then set to `detailed`
+   - `detailed` → planning already done, ask user if they want to reuse existing implementation steps or re-plan. Then proceed to implementation (Phase 2).
+   - `in_progress` → resume from checkpoint
+   - `completed` → inform user the task is done
+   - `cancelled` → ask if they want to reopen
 1. Read CURRENT_FOCUS.md + the task's TASK.md + relevant standards (see Standards Mapping). Load CURRENT_RESEARCH.md only when deeper context is needed (e.g., understanding API flows, error scenarios, existing code patterns).
 2. **Check checkpoint**: if CHECKPOINT.md references this task, read it and skip to the recorded step
 3. Sync branches: fetch origin, pull focus branch, merge focus into task branch (or create task branch). Commit the detailed plan + status change as first commit.
 4. Explore existing code patterns in the affected area (skip if resuming from checkpoint)
 5. Clarify anything unclear with the user (see "When to Ask")
 6. For each implementation step:
-   a. Implement directly if simple (<50 lines), or delegate to subagent with file ownership boundaries
+   a. Default to delegating to subagent with file ownership boundaries. Implement directly only if truly trivial (<20 lines).
    b. Review subagent output if delegated (correctness, standards, spiraling indicators)
    c. Quick-check the changes (see Per-Commit Checks)
    d. Commit the step (clean, atomic commit)
    e. Auto-checkpoint (update CHECKPOINT.md with current progress)
    f. Report what was done to user
-7. Full review of all changes
-8. Full verification (see Per-Task Verification)
-9. Present summary for user approval
-10. Push and create PR to focus branch (with TASK.md content as PR body)
+7. **Compression handling**: If context is getting large (many implementation steps completed), save a full checkpoint, assess remaining work. If significant work remains, create a new follow-up task with the remaining steps, place it immediately after the current task in CURRENT_FOCUS.md, set current task to `completed` for the work done so far, and instruct the user: "Context is getting large. Please run `/clear` and then `/barae:start-task <new-task-id>` to continue."
+8. Full review of all changes
+9. Full verification (see Per-Task Verification)
+10. Present summary for user approval
+11. Push and create PR to focus branch (with TASK.md content as PR body). Update TASK.md with PR URL. Task status stays `in_progress` — completion happens when PR is merged.
 
 ### When the user wants to chat/brainstorm (or `/barae:chat`)
 1. Read CURRENT_FOCUS.md and scan all active tasks
@@ -181,11 +181,12 @@ Opus always reviews — never use a less capable model to review a more capable 
 
 ### Task Status Values
 
-`planned` → `in_progress` → `completed` (and `cancelled` at any point)
+`planned` → `detailed` → `in_progress` → `completed` (and `cancelled` at any point)
 
 - **planned**: Lightweight stub exists (title, description, acceptance criteria, dependencies). Created by `/barae:plan-tasks` or `/barae:new-task`.
-- **in_progress**: Full details filled in (implementation steps, verification, test cases), implementation underway. Transitioned by `/barae:start-task`.
-- **completed**: Implementation done, PR created.
+- **detailed**: Full details filled in (implementation steps, verification, test cases) but not actively being worked on. Set by `/barae:start-task` Phase 1, or when `cancel-task` resets from `in_progress`.
+- **in_progress**: Implementation actively underway. Set when `/barae:start-task` Phase 2 begins.
+- **completed**: PR merged, task done. Set when PR merge is detected (by `status`, `archive-focus`, or manually).
 - **cancelled**: Task abandoned.
 
 ### Task Immutability
@@ -206,9 +207,7 @@ Tasks may depend on each other. Dependencies are:
 - **Identified during task creation** (`/barae:plan-tasks` or `/barae:new-task`) — dependencies are checked when tasks are created
 - **Noted in TASK.md** — a `## Dependencies` section lists task IDs that must complete first
 - **Updated after task completion** — when a task completes, check if it unblocks other tasks and note this to the user
-- **Enforced before starting** — `/barae:start-task` checks if blocking tasks are still `planned` or `in_progress`
-
-Tasks with no dependencies can be run in parallel via `/barae:parallel-tasks`.
+- **Enforced before starting** — `/barae:start-task` checks if blocking tasks are still `planned`, `detailed`, or `in_progress`
 
 ### Git & Branching Strategy
 
@@ -237,6 +236,7 @@ main (default branch)
 
 Checkpoints prevent lost progress across sessions:
 - **Auto-checkpoint**: Update CHECKPOINT.md after every commit during implementation
+- **All commands should checkpoint**: Any command that completes significant work (creates files, commits, changes state) should save a checkpoint before finishing
 - **Manual checkpoint**: `/barae:checkpoint` for a full state snapshot
 - **Retention**: Keep last 3 checkpoints in a `## Previous Checkpoints` section (summary only — date, branch, step)
 - **CHECKPOINT.md is gitignored** — it is ephemeral session state, not committed to the repo

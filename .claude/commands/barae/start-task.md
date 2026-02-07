@@ -28,7 +28,7 @@ If no task ID provided:
 
 If `.project/CHECKPOINT.md` exists and references this task:
 1. Read CHECKPOINT.md
-2. If the checkpoint shows planning is complete (status `in_progress` with Implementation Steps already in TASK.md), skip to **Phase 2, Step 9**
+2. If the checkpoint shows planning is complete (status `detailed` or `in_progress` with Implementation Steps already in TASK.md), skip to **Phase 2, Step 9**
 3. If the checkpoint shows implementation is underway, skip to the recorded step in Phase 2
 4. If no checkpoint or checkpoint references a different task, continue normally
 
@@ -36,13 +36,14 @@ If `.project/CHECKPOINT.md` exists and references this task:
 
 If TASK.md has a `## Dependencies` section listing other task IDs:
 1. Check each dependency task's status (read their TASK.md)
-2. If any blocking task is still `planned` or `in_progress`, tell user and stop
+2. If any blocking task is still `planned`, `detailed`, or `in_progress`, tell user and stop
 3. If all dependencies are `completed`, proceed
 
 ### Step 4: Check Task Status
 
 - `planned` → proceed with planning (Phase 1)
-- `in_progress` with Implementation Steps → skip to Phase 2, Step 9 (implementation)
+- `detailed` → planning already done. Ask user: "This task already has implementation details from a previous session. Want to reuse them or re-plan?" If reuse, skip to Phase 2, Step 9. If re-plan, proceed with Phase 1.
+- `in_progress` → resume from checkpoint (Phase 2)
 - `completed` → inform user the task is already done
 - `cancelled` → inform user the task was cancelled, ask if they want to reopen it
 
@@ -86,20 +87,31 @@ Show the user the proposed additions to TASK.md:
 
 Ask: **"Does this plan look right? Anything to add, remove, or change?"**
 
-### Step 8: Incorporate Feedback
+### Step 8: Incorporate Feedback and Save Plan
 
 If the user requests changes:
 1. Adjust the Implementation Steps, Verification Steps, or Test Cases as requested
 2. Re-present the updated plan
 3. Loop until user approves
 
-Once approved, proceed to Phase 2.
+Once approved:
+1. Update TASK.md with the full details (Implementation Steps, Verification Steps, Test Cases)
+2. Add `**Detailed**: <YYYY-MM-DD HH:MM>` metadata line
+3. Change `**Status**` to `detailed`
+4. Commit the plan (on the focus branch or task branch if it exists):
+   ```bash
+   git add .project/tasks/$ARGUMENTS/TASK.md
+   git commit -m "plan($ARGUMENTS): add implementation details"
+   ```
+5. Save a checkpoint
+
+Proceed to Phase 2.
 
 ---
 
 ## Phase 2: Implementation
 
-### Step 9: Sync Branches and Commit Plan
+### Step 9: Sync Branches and Begin Implementation
 
 ```bash
 git fetch origin
@@ -117,17 +129,10 @@ If the task branch does not exist:
 git checkout -b task/$ARGUMENTS
 ```
 
-Update TASK.md with the full details:
-- Add `**Detailed**: <YYYY-MM-DD HH:MM>` metadata line
-- Change `**Status**` to `in_progress`
-- Add `## Implementation Steps` section
-- Add `## Verification Steps` section
-- Add `## Test Cases` section
-
-Commit the plan:
+Change `**Status**` in TASK.md to `in_progress`. Commit:
 ```bash
 git add .project/tasks/$ARGUMENTS/TASK.md
-git commit -m "plan($ARGUMENTS): add implementation details"
+git commit -m "chore($ARGUMENTS): begin implementation"
 ```
 
 ### Step 10: Explore
@@ -146,8 +151,9 @@ Review implementation steps. For anything unclear, ask the user (see "When to As
 For each implementation step in TASK.md:
 
 1. **Decide: direct or delegate?**
-   - Under ~50 lines, follows existing pattern → implement directly
-   - 50+ lines, complex, or unfamiliar code → delegate to `barae-implementer` subagent
+   - Under ~20 lines, follows existing pattern → implement directly
+   - 20+ lines, complex, or unfamiliar code → delegate to `barae-implementer` subagent
+   - Default to delegation unless truly trivial
    - For delegated work: use Opus for complex steps, Sonnet for simple (<50 line) steps
 
 2. **If delegating** to `barae-implementer`:
@@ -179,14 +185,18 @@ For each implementation step in TASK.md:
 
 Repeat for each step. If a step reveals something unexpected, report to user before proceeding.
 
-### Step 13: Full Review
+### Step 13: Compression Handling
+
+If context is getting large (many implementation steps completed), save a full checkpoint, assess remaining work. If significant work remains, create a new follow-up task with the remaining steps, place it immediately after the current task in CURRENT_FOCUS.md, set current task to `completed` for the work done so far, and instruct the user: "Context is getting large. Please run `/clear` and then `/barae:start-task <new-task-id>` to continue."
+
+### Step 14: Full Review
 
 After all steps are complete:
 - Review ALL changes together (not just individual steps): `git diff focus/<focus-name>...HEAD`
 - Check cross-file consistency
 - Verify all acceptance criteria from TASK.md are met
 
-### Step 14: Per-Task Verification
+### Step 15: Per-Task Verification
 
 Delegate verification to the `barae-reviewer` subagent (Opus):
 - TypeScript type-check (backend and frontend)
@@ -203,7 +213,7 @@ If verification fails:
 - Re-run verification
 - Max 5 fix loops — if still failing, stop and ask user
 
-### Step 15: Present to User
+### Step 16: Present to User
 
 Summarize:
 - What was built/changed
@@ -215,14 +225,21 @@ Summarize:
 
 Wait for user approval.
 
-### Step 16: Ship (after user approval)
+### Step 17: Ship (after user approval)
 
 ```bash
 git push -u origin task/$ARGUMENTS
 gh pr create --base focus/<focus-name> --title "<task title>" --body "$(cat .project/tasks/$ARGUMENTS/TASK.md)"
 ```
 
-Commits were already made during Step 12. This step only pushes and creates the PR.
+After creating the PR, update TASK.md with the PR URL:
+- Add `**PR**: <URL>` metadata line
+- Commit: `git commit -m "chore($ARGUMENTS): add PR URL"`
+- Push: `git push origin task/$ARGUMENTS`
+
+Task status stays `in_progress` — completion happens when the PR is merged (detected by `/barae:status` or `/barae:archive-focus`).
+
+Save a final checkpoint.
 
 ---
 

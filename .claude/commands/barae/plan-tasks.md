@@ -5,8 +5,12 @@ You are generating lightweight task stubs from the current focus and research fi
 ## Pre-Flight
 
 1. Read `.project/CURRENT_FOCUS.md` — if it doesn't exist, tell user to create a focus first via `/barae:new-focus`
-2. Read `.project/CURRENT_RESEARCH.md` — if it doesn't exist, warn user that research is missing and ask if they want to proceed without it
+2. Read `.project/CURRENT_RESEARCH.md` — if it doesn't exist, warn user that research is missing (it should have been created by `/barae:new-focus`) and ask if they want to proceed without it
 3. Scan existing tasks in `.project/tasks/` to avoid overlap or duplication
+4. Checkout the focus branch:
+   ```bash
+   git checkout focus/<focus-name> && git pull origin focus/<focus-name>
+   ```
 
 ## Step 1: Research and Break Down (delegate to `barae-researcher` subagent — Opus)
 
@@ -88,16 +92,30 @@ For each approved task, create `.project/tasks/<task-id>/TASK.md` using the ligh
 - [ ] <criterion>
 ```
 
-## Step 6: Update Focus
+## Step 6: Update Focus and Commit
 
 Add all tasks to CURRENT_FOCUS.md's task list, ordered by dependency chain:
 ```markdown
 - [ ] `<task-id>` — <brief description>
 ```
 
+Commit and push the new task files:
+```bash
+git add .project/tasks/ .project/CURRENT_FOCUS.md
+git commit -m "tasks(<focus-name>): add planned tasks"
+git push origin focus/<focus-name>
+```
+
 Note the dependency chain to the user:
 - Which tasks can start immediately (no dependencies)
 - Which tasks are blocked and by what
+
+## Step 7: Checkpoint
+
+Save a checkpoint after task creation:
+- Tasks created (IDs and titles)
+- Dependency chain
+- Next step: `/barae:start-task <first-task-id>` to begin implementation
 
 ## Rules
 - Task **scope** (Description + Acceptance Criteria) is immutable after creation

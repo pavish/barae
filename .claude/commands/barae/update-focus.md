@@ -56,6 +56,13 @@ After updating the focus, check if any existing tasks are affected:
 - If a task's scope no longer aligns with the updated focus, flag it to the user
 - Suggest cancelling or creating replacement tasks as needed
 
+## Step 6: Checkpoint
+
+Save a checkpoint after focus update:
+- What changed in the focus
+- Any tasks affected
+- Current state
+
 ## Rules
 - Focus describes WHAT, not HOW — no implementation details
 - Focus name and branch name are immutable

@@ -6,6 +6,10 @@ You are creating a new task manually under the current focus. Use this for tasks
 
 1. Read `.project/CURRENT_FOCUS.md` — if it doesn't exist, tell user to create a focus first via `/barae:new-focus`
 2. Scan existing tasks in `.project/tasks/` to avoid overlap
+3. Checkout the focus branch:
+   ```bash
+   git checkout focus/<focus-name> && git pull origin focus/<focus-name>
+   ```
 
 ## Step 1: Gather Requirements
 
@@ -82,17 +86,31 @@ Show the full TASK.md using the lightweight template:
 
 Wait for explicit approval or change requests.
 
-## Step 6: Create File and Update Focus
+## Step 6: Create File, Commit, and Push
 
 1. Create `.project/tasks/<task-id>/TASK.md` with the approved content
 2. Insert the task entry into CURRENT_FOCUS.md's task list at the chosen position:
    ```markdown
    - [ ] `<task-id>` — <brief description>
    ```
+3. Commit and push:
+   ```bash
+   git add .project/tasks/<task-id>/ .project/CURRENT_FOCUS.md
+   git commit -m "task(<task-id>): add planned task"
+   git push origin focus/<focus-name>
+   ```
 
 If dependencies were identified, note them to the user:
 - "This task depends on `<task-id>` — it should be completed first."
 - "This task will unblock `<task-id>` once complete."
+
+## Step 7: Checkpoint
+
+Save a checkpoint after task creation:
+- Task ID and title
+- Position in task list
+- Dependencies
+- Next step suggestion
 
 ## Rules
 - Task **scope** (Description + Acceptance Criteria) is immutable after creation
