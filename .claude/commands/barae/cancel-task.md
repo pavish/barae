@@ -73,7 +73,15 @@ Wait for user to choose before proceeding.
    git push origin focus/<focus-name>
    ```
 
-8. **Report** what was cleaned up (PR closed? Branch deleted? Status reset?)
+8. **Update focus PR description** — delegate to a Bash subagent to save context window:
+   ```
+   Find the focus PR number and update its body with the latest CURRENT_FOCUS.md:
+   gh pr list --head focus/<focus-name> --state open --json number -q '.[0].number'
+   gh pr edit <number> --body "$(cat .project/CURRENT_FOCUS.md)"
+   ```
+   Run with `dangerouslyDisableSandbox: true` (gh needs keyring access).
+
+9. **Report** what was cleaned up (PR closed? Branch deleted? Status reset?)
 
 ## Option B: Cancel Task Entirely
 
@@ -115,7 +123,15 @@ Wait for user to choose before proceeding.
    git push origin focus/<focus-name>
    ```
 
-8. **Report** what was deleted (PR closed? Branch deleted? Task folder removed? Focus updated?)
+8. **Update focus PR description** — delegate to a Bash subagent to save context window:
+   ```
+   Find the focus PR number and update its body with the latest CURRENT_FOCUS.md:
+   gh pr list --head focus/<focus-name> --state open --json number -q '.[0].number'
+   gh pr edit <number> --body "$(cat .project/CURRENT_FOCUS.md)"
+   ```
+   Run with `dangerouslyDisableSandbox: true` (gh needs keyring access).
+
+9. **Report** what was deleted (PR closed? Branch deleted? Task folder removed? Focus updated?)
 
 ## Step 3: Checkpoint
 

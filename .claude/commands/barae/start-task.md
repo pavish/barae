@@ -237,6 +237,12 @@ After creating the PR, update TASK.md with the PR URL:
 - Commit: `git commit -m "chore($ARGUMENTS): add PR URL"`
 - Push: `git push origin task/$ARGUMENTS`
 
+**Update task PR description** — delegate to a Bash subagent to save context window (the PR body is now stale since TASK.md was updated with the PR URL after creation):
+```
+gh pr edit <task-pr-number> --body "$(cat .project/tasks/$ARGUMENTS/TASK.md)"
+```
+Run with `dangerouslyDisableSandbox: true` (gh needs keyring access).
+
 Task status stays `in_progress` — completion happens when the PR is merged (detected by `/barae:status` or `/barae:archive-focus`).
 
 Save a final checkpoint.

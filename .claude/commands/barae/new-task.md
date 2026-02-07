@@ -99,6 +99,13 @@ Wait for explicit approval or change requests.
    git commit -m "task(<task-id>): add planned task"
    git push origin focus/<focus-name>
    ```
+4. **Update focus PR description** — delegate to a Bash subagent to save context window:
+   ```
+   Find the focus PR number and update its body with the latest CURRENT_FOCUS.md:
+   gh pr list --head focus/<focus-name> --state open --json number -q '.[0].number'
+   gh pr edit <number> --body "$(cat .project/CURRENT_FOCUS.md)"
+   ```
+   Run with `dangerouslyDisableSandbox: true` (gh needs keyring access).
 
 If dependencies were identified, note them to the user:
 - "This task depends on `<task-id>` — it should be completed first."

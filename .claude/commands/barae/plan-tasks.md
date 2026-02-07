@@ -106,6 +106,14 @@ git commit -m "tasks(<focus-name>): add planned tasks"
 git push origin focus/<focus-name>
 ```
 
+**Update focus PR description** — delegate to a Bash subagent to save context window:
+```
+Find the focus PR number and update its body with the latest CURRENT_FOCUS.md:
+gh pr list --head focus/<focus-name> --state open --json number -q '.[0].number'
+gh pr edit <number> --body "$(cat .project/CURRENT_FOCUS.md)"
+```
+Run with `dangerouslyDisableSandbox: true` (gh needs keyring access).
+
 Note the dependency chain to the user:
 - Which tasks can start immediately (no dependencies)
 - Which tasks are blocked and by what

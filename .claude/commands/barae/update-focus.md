@@ -44,10 +44,13 @@ git commit -m "focus(<focus-name>): update focus scope"
 git push origin focus/<focus-name>
 ```
 
-Update the focus draft PR body if it exists:
-```bash
+**Update focus PR description** — delegate to a Bash subagent to save context window:
+```
+Find the focus PR number and update its body with the latest CURRENT_FOCUS.md:
+gh pr list --head focus/<focus-name> --state open --json number -q '.[0].number'
 gh pr edit <number> --body "$(cat .project/CURRENT_FOCUS.md)"
 ```
+Run with `dangerouslyDisableSandbox: true` (gh needs keyring access).
 
 ## Step 5: Impact Assessment
 
