@@ -19,6 +19,8 @@ const schema = Type.Object({
   SMTP_PASSWORD: Type.String({ default: '' }),
   SMTP_SECURE: Type.Boolean({ default: false }),
   EMAIL_FROM: Type.String({ default: 'Barae <noreply@barae.app>' }),
+  GITHUB_CLIENT_ID: Type.String({ default: '' }),
+  GITHUB_CLIENT_SECRET: Type.String({ default: '' }),
 })
 
 export type Config = Static<typeof schema>
