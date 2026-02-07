@@ -5,7 +5,8 @@
 **Focus**: github-app-auth
 **Created**: 2026-02-08 10:30
 **Branch**: `task/412b79-gh-auth-page`
-**Status**: in_progress
+**Status**: pr_raised
+**PR**: https://github.com/pavish/barae/pull/7
 **Detailed**: 2026-02-08 14:00
 
 ## Dependencies
