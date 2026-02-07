@@ -22,6 +22,9 @@ export default fp(
     // so we append "/auth" to get the full public endpoint base.
     const authBaseURL = `${config.AUTH_BASE_URL}/auth`
 
+    const hasGitHubCredentials =
+      config.GITHUB_CLIENT_ID !== '' && config.GITHUB_CLIENT_SECRET !== ''
+
     const auth = betterAuth({
       appName: 'Barae',
       baseURL: authBaseURL,
@@ -40,6 +43,22 @@ export default fp(
       },
       emailVerification: {
         autoSignInAfterVerification: true,
+      },
+      account: {
+        accountLinking: {
+          enabled: true,
+          trustedProviders: ['github'],
+        },
+      },
+      socialProviders: {
+        ...(hasGitHubCredentials
+          ? {
+              github: {
+                clientId: config.GITHUB_CLIENT_ID,
+                clientSecret: config.GITHUB_CLIENT_SECRET,
+              },
+            }
+          : {}),
       },
       session: {
         expiresIn: 60 * 60 * 24 * 7,
