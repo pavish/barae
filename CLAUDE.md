@@ -123,6 +123,7 @@ Opus always reviews — never use a less capable model to review a more capable 
    - `planned` → run full planning phase (Phase 1), then set to `detailed`
    - `detailed` → planning already done, ask user if they want to reuse existing implementation steps or re-plan. Then proceed to implementation (Phase 2).
    - `in_progress` → resume from checkpoint
+   - `pr_raised` → inform user the PR is awaiting merge
    - `completed` → inform user the task is done
    - `cancelled` → ask if they want to reopen
 1. Read CURRENT_FOCUS.md + the task's TASK.md + relevant standards (see Standards Mapping). Load CURRENT_RESEARCH.md only when deeper context is needed (e.g., understanding API flows, error scenarios, existing code patterns).
@@ -141,7 +142,18 @@ Opus always reviews — never use a less capable model to review a more capable 
 8. Full review of all changes
 9. Full verification (see Per-Task Verification)
 10. Present summary for user approval
-11. Push and create PR to focus branch (with TASK.md content as PR body). Update TASK.md with PR URL. Task status stays `in_progress` — completion happens when PR is merged.
+11. Push and create PR to focus branch (with TASK.md content as PR body). Update TASK.md with PR URL. Set task status to `pr_raised`. Commit the status change and push.
+
+### When a task PR is merged
+
+When the user merges a task PR (or asks Claude to merge it):
+1. Merge the PR (if not already merged)
+2. Switch to the focus branch and pull latest (the merge commit is now on the focus branch)
+3. Update TASK.md: set status to `completed`
+4. Update CURRENT_FOCUS.md: check off the task (`- [ ]` → `- [x]`)
+5. Commit: `chore(<task-id>): mark task completed`
+6. Push the focus branch
+7. Note any tasks that are now unblocked by this completion
 
 ### When the user wants to chat/brainstorm (or `/barae:chat`)
 1. Read CURRENT_FOCUS.md and scan all active tasks
@@ -181,12 +193,13 @@ Opus always reviews — never use a less capable model to review a more capable 
 
 ### Task Status Values
 
-`planned` → `detailed` → `in_progress` → `completed` (and `cancelled` at any point)
+`planned` → `detailed` → `in_progress` → `pr_raised` → `completed` (and `cancelled` at any point)
 
 - **planned**: Lightweight stub exists (title, description, acceptance criteria, dependencies). Created by `/barae:plan-tasks` or `/barae:new-task`.
-- **detailed**: Full details filled in (implementation steps, verification, test cases) but not actively being worked on. Set by `/barae:start-task` Phase 1, or when `cancel-task` resets from `in_progress`.
+- **detailed**: Full details filled in (implementation steps, verification, test cases) but not actively being worked on. Set by `/barae:start-task` Phase 1, or when `cancel-task` resets from `in_progress` or `pr_raised`.
 - **in_progress**: Implementation actively underway. Set when `/barae:start-task` Phase 2 begins.
-- **completed**: PR merged, task done. Set when PR merge is detected (by `status`, `archive-focus`, or manually).
+- **pr_raised**: Implementation complete, PR created and awaiting review/merge. Set at end of `/barae:start-task` after PR creation.
+- **completed**: PR merged, task done. Set during post-merge update (see "When a task PR is merged").
 - **cancelled**: Task abandoned.
 
 ### Task Immutability
@@ -207,7 +220,7 @@ Tasks may depend on each other. Dependencies are:
 - **Identified during task creation** (`/barae:plan-tasks` or `/barae:new-task`) — dependencies are checked when tasks are created
 - **Noted in TASK.md** — a `## Dependencies` section lists task IDs that must complete first
 - **Updated after task completion** — when a task completes, check if it unblocks other tasks and note this to the user
-- **Enforced before starting** — `/barae:start-task` checks if blocking tasks are still `planned`, `detailed`, or `in_progress`
+- **Enforced before starting** — `/barae:start-task` checks if blocking tasks are still `planned`, `detailed`, `in_progress`, or `pr_raised`
 
 ### Git & Branching Strategy
 
